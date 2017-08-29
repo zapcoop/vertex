@@ -1,6 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from rest_framework.exceptions import ValidationError
 import reversion
 
 from contacts.models import URL_SPECIFIC_INFORMATION_TYPES

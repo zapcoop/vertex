@@ -1,11 +1,14 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.db import models, IntegrityError
-from django.utils.text import slugify
+from django.db import models
+from django.db.models import Manager
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
 from django.db import transaction
 from django.core.cache import cache
+
+from uuslug import slugify, uuslug
+
 import reversion
 
 from contacts.rules.organization import is_object_organization_admin
@@ -14,20 +17,18 @@ from vertex import rules
 from contacts.models import EmailAddress
 from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
 from contacts.rules.person import is_same_organization
-from vertex.models import AbstractDatedModel, AbstractSelfUpdatingModel
+from vertex.models import AbstractDatedModel
 from . import GENERIC_INFORMATION_TYPES
-from vertex.utils.softdeletion import SoftDeletableModel, SoftDeletableManager
-from vertex.utils import cache_result
 from ..utils import gravatar_hash
 
 GENDER_CHOICES = (
     ('M', _('Male')),
     ('F', _('Female')),
-    ('O', _('Other')),
+    ('N', _('Non-Binary')),
 )
 
 
-class PersonManager(SoftDeletableManager):
+class PersonManager(Manager):
     @transaction.atomic
     def create_person(self, first_name, last_name, email_address, organization=None, title=None, middle_name=None,
                       suffix=None,
@@ -49,8 +50,10 @@ class PersonManager(SoftDeletableManager):
 
 
 @reversion.register
-class Person(AbstractSelfUpdatingModel, SoftDeletableModel, AbstractDatedModel):
+class Person(AbstractDatedModel):
     """Person model."""
+    slug = models.SlugField(editable=False)
+
     title = models.CharField(
         _('Title'),
         max_length=20,
@@ -76,12 +79,6 @@ class Person(AbstractSelfUpdatingModel, SoftDeletableModel, AbstractDatedModel):
         max_length=20,
         blank=True,
         null=True)
-    nickname = models.CharField(
-        _('Nickname'),
-        max_length=20,
-        blank=True,
-        null=True
-    )
 
     gender = models.CharField(
         max_length=5,
@@ -137,13 +134,10 @@ class Person(AbstractSelfUpdatingModel, SoftDeletableModel, AbstractDatedModel):
             return self.full_name
 
     def clean(self):
-        if not self.slug:
-            self.slug = slugify(self.full_name)
-
-        self.title = self.title.capitalize()
-        self.first_name = self.first_name.capitalize()
-        self.last_name = self.last_name.capitalize()
-        self.suffix = self.suffix.capitalize()
+        self.title = self.title.capitalize() if self.title else None
+        self.first_name = self.first_name.capitalize() if self.first_name else None
+        self.last_name = self.last_name.capitalize() if self.last_name else None
+        self.suffix = self.suffix.capitalize() if self.suffix else None
 
     @property
     def full_name(self):
@@ -173,6 +167,9 @@ class Person(AbstractSelfUpdatingModel, SoftDeletableModel, AbstractDatedModel):
         super(Person, self).delete(force=force)
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = uuslug(self.full_name, instance=self)
+
         if self.pk is not None and self.user:
             user_obj = self.user
             prev_obj = Person.objects.get(pk=self.pk)
@@ -227,7 +224,6 @@ class Person(AbstractSelfUpdatingModel, SoftDeletableModel, AbstractDatedModel):
         return self.email_addresses.filter(primary=True).first()
 
     @property
-    @cache_result(timeout=None)
     def gravatar_url(self):
         hash_input = getattr(self.primary_email, 'email_address', self.pk)
         hashvalue = gravatar_hash(hash_input)

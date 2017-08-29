@@ -5,17 +5,13 @@ import reversion
 from contacts.rules.organization import is_organization_member
 from vertex import rules
 from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
-from vertex.fields import AutoReferenceField
 from vertex.models import AbstractDatedModel
-from vertex.utils import slugify_spaceless
-from vertex.utils.softdeletion import SoftDeletableModel
-from tags.models import AbstractTaggedModel
 
 __author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
 
 @reversion.register
-class Organization(SoftDeletableModel, AbstractTaggedModel, AbstractDatedModel):
+class Organization(AbstractDatedModel):
     """Organization model."""
     parent = models.ForeignKey(
         'self',
@@ -24,37 +20,18 @@ class Organization(SoftDeletableModel, AbstractTaggedModel, AbstractDatedModel):
         null=True,
         related_name='children'
     )
-    customers = models.ManyToManyField(
-        'self',
-        verbose_name=_("Customers"),
-        blank=True,
-        related_name='resellers',
-        symmetrical=False
-    )
+
     name = models.CharField(
         _('Name'),
         max_length=200
     )
-    nickname = models.CharField(
-        _('Nickname'),
-        max_length=50,
-        blank=True,
-        null=True
-    )
-    reference = AutoReferenceField(
-        _('Reference'),
-        max_length=6,
-        unique=True,
-        populate_from='name',
-        sep='',
-        slugify=slugify_spaceless
 
-    )
     people = models.ManyToManyField(
         "contacts.Person",
         related_name='organizations',
 
     )
+
     administrators = models.ManyToManyField(
         "contacts.Person",
         related_name='managed_organizations',
@@ -64,7 +41,6 @@ class Organization(SoftDeletableModel, AbstractTaggedModel, AbstractDatedModel):
         blank=True,
         null=True
     )
-
 
     class Meta:
         ordering = ('name',)
@@ -76,7 +52,7 @@ class Organization(SoftDeletableModel, AbstractTaggedModel, AbstractDatedModel):
         return u"{name}".format(name=self.name)
 
 
-class OrganizationAlias(SoftDeletableModel):
+class OrganizationAlias(AbstractDatedModel):
     name = models.CharField(max_length=200)
     organization = models.ForeignKey('contacts.Organization', related_name='aliases')
 

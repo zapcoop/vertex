@@ -7,11 +7,10 @@ from contacts.rules.organization import is_object_organization_admin
 from vertex import rules
 from vertex.models import AbstractDatedModel
 from vertex.rules.predicates import has_django_permission, is_superuser, is_staff
-from vertex.utils.softdeletion import SoftDeletableModel
 
 
 @reversion.register
-class OrganizationDepartment(AbstractDatedModel, SoftDeletableModel):
+class OrganizationDepartment(AbstractDatedModel):
     """OrganizationDepartment model."""
 
     organization = models.ForeignKey(

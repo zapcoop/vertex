@@ -1,8 +1,10 @@
 from modeltranslation.translator import translator, TranslationOptions
-from .models import OrganizationDepartment
+from .models import OrganizationDepartment, ContactGroup
 
-class OrganizationDepartmentTranslationOptions(TranslationOptions):
+
+class NameAndDescriptionTranslationOptions(TranslationOptions):
     fields = ('name', 'description',)
 
 
-translator.register(OrganizationDepartment, OrganizationDepartmentTranslationOptions)
+translator.register(OrganizationDepartment, NameAndDescriptionTranslationOptions)
+translator.register(ContactGroup, NameAndDescriptionTranslationOptions)

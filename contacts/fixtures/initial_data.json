@@ -1,0 +1,100 @@
+[
+  {
+    "model": "contacts.contactgroup",
+    "pk": 1,
+    "fields": {
+      "created_at": "2017-08-29T19:39:04.251Z",
+      "modified_at": "2017-08-29T19:39:04.251Z",
+      "name": "Manufacturers",
+      "name_en": "Manufacturers",
+      "name_fr": "Fabricants",
+      "description": null,
+      "description_en": null,
+      "description_fr": null,
+      "people": [],
+      "organizations": []
+    }
+  },
+  {
+    "model": "contacts.contactgroup",
+    "pk": 2,
+    "fields": {
+      "created_at": "2017-08-29T19:40:51.774Z",
+      "modified_at": "2017-08-29T19:40:51.774Z",
+      "name": "Telecom Suppliers",
+      "name_en": "Telecom Suppliers",
+      "name_fr": "Fournisseurs de t\u00e9l\u00e9communications",
+      "description": null,
+      "description_en": null,
+      "description_fr": null,
+      "people": [],
+      "organizations": []
+    }
+  },
+  {
+    "model": "contacts.contactgroup",
+    "pk": 3,
+    "fields": {
+      "created_at": "2017-08-29T19:41:55.651Z",
+      "modified_at": "2017-08-29T19:41:55.651Z",
+      "name": "Hardware Suppliers",
+      "name_en": "Hardware Suppliers",
+      "name_fr": "Fournisseurs de mat\u00e9riel",
+      "description": null,
+      "description_en": null,
+      "description_fr": null,
+      "people": [],
+      "organizations": []
+    }
+  },
+  {
+    "model": "contacts.contactgroup",
+    "pk": 4,
+    "fields": {
+      "created_at": "2017-08-29T19:41:55.958Z",
+      "modified_at": "2017-08-29T19:43:54.819Z",
+      "name": "Service Suppliers",
+      "name_en": "Service Suppliers",
+      "name_fr": "Fournisseurs de services",
+      "description": null,
+      "description_en": null,
+      "description_fr": null,
+      "people": [],
+      "organizations": []
+    }
+  },
+  {
+    "model": "contacts.contactgroup",
+    "pk": 5,
+    "fields": {
+      "created_at": "2017-08-29T19:42:39.047Z",
+      "modified_at": "2017-08-29T19:42:47.060Z",
+      "name": "Clients",
+      "name_en": "Clients",
+      "name_fr": "Clients",
+      "description": null,
+      "description_en": null,
+      "description_fr": null,
+      "people": [],
+      "organizations": []
+    }
+  },
+  {
+    "model": "contacts.person",
+    "pk": 1,
+    "fields": {
+      "created_at": "2017-08-29T19:21:05.924Z",
+      "modified_at": "2017-08-29T19:23:08.979Z",
+      "slug": "jonathan-senecal",
+      "title": null,
+      "first_name": "Jonathan",
+      "middle_name": null,
+      "last_name": "Senecal",
+      "suffix": null,
+      "gender": "M",
+      "date_of_birth": null,
+      "user": null,
+      "custom_avatar_url": ""
+    }
+  }
+]
