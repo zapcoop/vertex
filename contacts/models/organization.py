@@ -44,8 +44,8 @@ class Organization(AbstractDatedModel):
 
     class Meta:
         ordering = ('name',)
-        verbose_name = _('Organization')
-        verbose_name_plural = _('Organizations')
+        verbose_name = _('organization')
+        verbose_name_plural = _('organizations')
         app_label = 'contacts'
 
     def __str__(self):
@@ -55,6 +55,12 @@ class Organization(AbstractDatedModel):
 class OrganizationAlias(AbstractDatedModel):
     name = models.CharField(max_length=200)
     organization = models.ForeignKey('contacts.Organization', related_name='aliases')
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = _('organization alias')
+        verbose_name_plural = _('organization aliases')
+        app_label = 'contacts'
 
     def __str__(self):
         return '{} alias of {}'.format(self.name, self.organization.name)
