@@ -8,7 +8,7 @@ from django.template import Template, Context, loader
 import markdown
 import bleach
 
-from noss.models import AbstractDatedModel
+from vertex.models import AbstractDatedModel
 
 BASE_TEMPLATE_PREFIX = 'email_templates/base_service_email'
 
@@ -16,7 +16,7 @@ MISSING_TRANSLATION_MESSAGE = ("Can't render a bilingual version of "
                                "EmailTemplate {} because a translation is missing. "
                                "The following translations were available: {}")
 
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
 
 class EmailTemplate(AbstractDatedModel):

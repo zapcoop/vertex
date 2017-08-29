@@ -3,15 +3,15 @@ from django.utils.translation import ugettext_lazy as _
 import reversion
 
 from contacts.rules.organization import is_organization_member
-from noss import rules
-from noss.rules.predicates import has_django_permission, is_staff, is_superuser
-from noss.fields import AutoReferenceField
-from noss.models import AbstractDatedModel
-from noss.utils import slugify_spaceless
-from noss.utils.softdeletion import SoftDeletableModel
+from vertex import rules
+from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
+from vertex.fields import AutoReferenceField
+from vertex.models import AbstractDatedModel
+from vertex.utils import slugify_spaceless
+from vertex.utils.softdeletion import SoftDeletableModel
 from tags.models import AbstractTaggedModel
 
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
 
 @reversion.register

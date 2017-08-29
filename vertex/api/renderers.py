@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.utils import encoding
 
-from noss import tasks
+from vertex import tasks
 from rest_framework_json_api.renderers import JSONRenderer
 
 

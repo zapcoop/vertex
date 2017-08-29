@@ -4,10 +4,10 @@ import reversion
 
 from contacts.rules.department import is_department_member, is_department_manager
 from contacts.rules.organization import is_object_organization_admin
-from noss import rules
-from noss.models import AbstractDatedModel
-from noss.rules.predicates import has_django_permission, is_superuser, is_staff
-from noss.utils.softdeletion import SoftDeletableModel
+from vertex import rules
+from vertex.models import AbstractDatedModel
+from vertex.rules.predicates import has_django_permission, is_superuser, is_staff
+from vertex.utils.softdeletion import SoftDeletableModel
 
 
 @reversion.register

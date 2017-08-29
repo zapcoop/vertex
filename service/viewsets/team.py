@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 
-from noss.api.permissions import RestrictedObjectLevelPermissions
+from vertex.api.permissions import RestrictedObjectLevelPermissions
 from service.models import Team
 from service.serializers import TeamSerializer
 from ..filters import TeamFilterSet

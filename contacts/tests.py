@@ -10,7 +10,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 from rest_framework_json_api.utils import format_relation_name
-from noss.utils.test import VerifiedForcedAuthenticationMixin, PaginatedAPITestMixin
+from vertex.utils.test import VerifiedForcedAuthenticationMixin, PaginatedAPITestMixin
 from .models import Person, EmailAddress
 
 

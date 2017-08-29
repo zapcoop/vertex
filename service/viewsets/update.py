@@ -6,7 +6,7 @@ from service.models import Update
 from service.serializers import UpdateSerializer
 from ..filters import UpdateFilterSet
 
-from noss.api.permissions import RestrictedObjectLevelPermissions
+from vertex.api.permissions import RestrictedObjectLevelPermissions
 
 
 class UpdateViewSet(mixins.CreateModelMixin,

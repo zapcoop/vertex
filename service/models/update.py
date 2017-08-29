@@ -4,9 +4,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from noss.models import AbstractDatedModel
-from noss import rules
-from noss.rules.predicates import has_django_permission, is_staff, is_superuser
+from vertex.models import AbstractDatedModel
+from vertex import rules
+from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
 
 from .ticket import Ticket
 

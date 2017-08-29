@@ -13,7 +13,7 @@ from rest_framework_json_api.utils import format_relation_name
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from noss.api.serializers import (OTPJSONWebTokenAuthenticationSerializer,
+from vertex.api.serializers import (OTPJSONWebTokenAuthenticationSerializer,
                                   ChangePasswordSerializer, RefreshJWTSerializer)
 from contacts.serializers.person import SetPrimaryEmailSerializer
 

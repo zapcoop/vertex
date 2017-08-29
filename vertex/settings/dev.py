@@ -20,8 +20,8 @@ MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware',] + MIDDLEWARE
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'noss',
-        'USER': 'noss',
+        'NAME': 'vertex',
+        'USER': 'vertex',
         'PASSWORD': '1a2e233f53edaf690',
         'HOST': '127.0.0.1',
     },

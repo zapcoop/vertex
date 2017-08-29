@@ -3,13 +3,13 @@ import os
 from celery import Celery
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'noss.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vertex.settings')
 
 
 from django.conf import settings
 
 
-app = Celery('noss')
+app = Celery('vertex')
 
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)

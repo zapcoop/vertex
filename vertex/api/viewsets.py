@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework import mixins
 
-from noss.api.permissions import IsSuperUser
+from vertex.api.permissions import IsSuperUser
 from .serializers import UserSerializer, GroupSerializer, PermissionSerializer,\
     TOTPDeviceSerializer, PasswordSerializer, TOTPTokenSerializer, StaticTokenSerializer
 

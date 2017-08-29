@@ -2,7 +2,7 @@ from django.db.models import QuerySet
 
 from rest_framework import viewsets
 
-from noss.api.permissions import RestrictedObjectLevelPermissions
+from vertex.api.permissions import RestrictedObjectLevelPermissions
 from service.models import Ticket
 from service.serializers import TicketSerializer
 from ..filters import TicketFilterSet

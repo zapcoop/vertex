@@ -10,9 +10,9 @@ from contacts.models import GENERIC_INFORMATION_TYPES, PHONE_SPECIFIC_INFORMATIO
 from contacts.rules.organization import is_object_organization_member, is_object_organization_admin
 from contacts.rules.person import is_same_organization, is_object_person_manager
 from contacts.rules.phonenumber import is_phone_number_owner
-from noss import rules
-from noss.models import AbstractDatedModel
-from noss.rules.predicates import (has_django_permission, is_verified,
+from vertex import rules
+from vertex.models import AbstractDatedModel
+from vertex.rules.predicates import (has_django_permission, is_verified,
                                    is_superuser, is_staff, is_authenticated)
 
 

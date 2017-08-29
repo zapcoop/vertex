@@ -6,7 +6,7 @@ import django_otp
 from django.conf import settings
 from rest_framework_jwt.settings import api_settings
 
-from noss import tasks
+from vertex import tasks
 
 
 def get_otpauth_url(account_name, secret, issuer=None, digits=None):

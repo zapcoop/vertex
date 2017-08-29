@@ -2,10 +2,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from hvad.models import TranslatableModel, TranslatedFields
 
-from noss.models import AbstractDatedModel
+from vertex.models import AbstractDatedModel
 
 
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
 
 class EscalationExclusion(AbstractDatedModel, TranslatableModel):

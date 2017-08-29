@@ -1,4 +1,4 @@
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 import rules
 
 

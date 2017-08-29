@@ -1,6 +1,6 @@
 from rest_framework import fields
 
-from noss.rules import perm_exists
+from vertex.rules import perm_exists
 
 
 class PermissionsField(fields.Field):

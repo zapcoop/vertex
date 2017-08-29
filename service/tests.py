@@ -22,9 +22,9 @@ from django_mailbox.models import Mailbox
 from service.models import Ticket, Update, Team, TicketSubscriber
 from contacts.models import Organization, Person, EmailDomain, EmailAddress
 import service.tasks
-from noss.utils.test import VerifiedForcedAuthenticationMixin
+from vertex.utils.test import VerifiedForcedAuthenticationMixin
 
-MAILDIR_PATH = '/tmp/noss_test_maildir'
+MAILDIR_PATH = '/tmp/vertex_test_maildir'
 
 
 class TestUpdateModel(TestCase):
@@ -115,7 +115,7 @@ class TestServiceEmailTasks(TestCase):
         self.mailbox = Mailbox.objects.create(
             name='test_mailbox',
             uri='maildir://' + MAILDIR_PATH,
-            from_email='test_mailbox@noss.com'
+            from_email='test_mailbox@vertex.com'
         )
 
         # clear any pre-existing messages in the local mailbox

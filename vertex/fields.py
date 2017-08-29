@@ -1,6 +1,6 @@
 from autoslug import AutoSlugField, utils
 
-from noss.utils import generate_unique_slug
+from vertex.utils import generate_unique_slug
 
 
 class AutoReferenceField(AutoSlugField):

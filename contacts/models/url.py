@@ -7,10 +7,10 @@ from contacts.models import URL_SPECIFIC_INFORMATION_TYPES
 from contacts.rules.organization import is_object_organization_admin, is_object_organization_member
 from contacts.rules.person import is_same_organization, is_object_person_manager
 from contacts.rules.url import is_url_owner
-from noss import rules
-from noss.models import AbstractDatedModel
-from noss.rules import has_django_permission
-from noss.rules.predicates import is_verified, is_superuser, is_staff, is_authenticated
+from vertex import rules
+from vertex.models import AbstractDatedModel
+from vertex.rules import has_django_permission
+from vertex.rules.predicates import is_verified, is_superuser, is_staff, is_authenticated
 
 
 @reversion.register

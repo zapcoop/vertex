@@ -10,14 +10,14 @@ import reversion
 
 from contacts.rules.organization import is_object_organization_admin
 
-from noss import rules
+from vertex import rules
 from contacts.models import EmailAddress
-from noss.rules.predicates import has_django_permission, is_staff, is_superuser
+from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
 from contacts.rules.person import is_same_organization
-from noss.models import AbstractDatedModel, AbstractSelfUpdatingModel
+from vertex.models import AbstractDatedModel, AbstractSelfUpdatingModel
 from . import GENERIC_INFORMATION_TYPES
-from noss.utils.softdeletion import SoftDeletableModel, SoftDeletableManager
-from noss.utils import cache_result
+from vertex.utils.softdeletion import SoftDeletableModel, SoftDeletableManager
+from vertex.utils import cache_result
 from ..utils import gravatar_hash
 
 GENDER_CHOICES = (

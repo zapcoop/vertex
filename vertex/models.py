@@ -9,7 +9,7 @@ from django.db.models.signals import m2m_changed, pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
-from noss import tasks
+from vertex import tasks
 from rest_framework_json_api import utils
 
 

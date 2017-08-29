@@ -1,4 +1,4 @@
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
 from .team import Team
 from .ticket import Ticket, TICKET_ID_ALPHABET, TICKET_ID_SALT

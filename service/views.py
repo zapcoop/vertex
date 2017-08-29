@@ -3,7 +3,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import exceptions, status
-from noss.api.permissions import RestrictedObjectLevelPermissions
+from vertex.api.permissions import RestrictedObjectLevelPermissions
 from rest_framework_json_api.utils import format_relation_name
 from rest_framework_json_api.views import RelationshipView
 from .models import Ticket, Update, Team

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from noss.models import AbstractDatedModel
+from vertex.models import AbstractDatedModel
 
 
 def attachment_path(instance, filename):

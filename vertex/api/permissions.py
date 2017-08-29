@@ -1,6 +1,6 @@
 from rest_framework.permissions import DjangoObjectPermissions, BasePermission
 from django_otp import user_has_device
-from noss.settings import app_settings
+from vertex.settings import app_settings
 
 
 class RestrictedObjectLevelPermissions(DjangoObjectPermissions):

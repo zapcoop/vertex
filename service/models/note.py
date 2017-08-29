@@ -5,11 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 
-from noss import rules
-from noss.rules.predicates import has_django_permission, is_staff, is_superuser
+from vertex import rules
+from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
 from ..rules.note import is_note_creator
 
-from noss.models import AbstractDatedModel
+from vertex.models import AbstractDatedModel
 
 
 class Note(AbstractDatedModel, models.Model):

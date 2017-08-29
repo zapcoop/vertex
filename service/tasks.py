@@ -5,13 +5,13 @@ from django.db import transaction
 from django_mailbox.models import Message
 import html2text
 
-from noss.celery import app
-import noss.rules
+from vertex.celery import app
+import vertex.rules
 from service.models import Ticket, TicketSubscriber, Update, EmailTemplate
 from contacts.models import EmailAddress, EmailDomain
 
 
-@app.task(routing_key='noss', ignore_result=True)
+@app.task(routing_key='vertex', ignore_result=True)
 def create_ticket_from_email_message(message_pk):
     with transaction.atomic():
         message = Message.objects.get(pk=message_pk)
@@ -46,7 +46,7 @@ def create_ticket_from_email_message(message_pk):
         add_subscribers_from_email(message, ticket)
 
 
-@app.task(routing_key='noss', ignore_result=True)
+@app.task(routing_key='vertex', ignore_result=True)
 def update_ticket_from_email_message(message_pk, hash_id):
     message = Message.objects.get(pk=message_pk)
     sender = EmailAddress.objects.filter(email_address=message.from_address[0]).first()
@@ -117,7 +117,7 @@ def has_update_permission(sender, ticket):
 
     if sender.person:
         try:
-            return noss.rules.has_perm('service.change_ticket', sender.person, ticket)
+            return vertex.rules.has_perm('service.change_ticket', sender.person, ticket)
         except PermissionDenied:
             return False
 
@@ -137,7 +137,7 @@ def has_view_permission(sender, ticket):
 
     if sender.person:
         try:
-            return noss.rules.has_perm('service.view_ticket', sender.person, ticket)
+            return vertex.rules.has_perm('service.view_ticket', sender.person, ticket)
         except PermissionDenied:
             return False
     elif sender.organization:

@@ -5,17 +5,17 @@ from django_fsm import FSMIntegerField, transition
 from hashids import Hashids
 
 from contacts.rules.organization import is_object_organization_admin
-from noss import rules
-from noss.models import AbstractDatedModel
-from noss.rules.predicates import has_django_permission, is_staff, is_superuser
+from vertex import rules
+from vertex.models import AbstractDatedModel
+from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
 from tags.models import AbstractTaggedModel
 from ..rules.department import is_ticket_team_member
 from ..rules.ticket import (has_ticket_object_view_rights, has_ticket_change_subscription,
                             has_ticket_view_subscription, is_ticket_signaler)
 
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
-TICKET_ID_SALT = "NOSS-service-app"
+TICKET_ID_SALT = "vertex-service-app"
 TICKET_ID_ALPHABET = 'ABCDEFGHJKLNPQRSUVXYZ012356789'
 
 

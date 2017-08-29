@@ -2,7 +2,7 @@ from django.db.models import QuerySet
 
 from contacts.models import Organization, Person
 from contacts.serializers import OrganizationSerializer, PersonSerializer
-from noss.api.serializermixins import FilterRelatedMixin
+from vertex.api.serializermixins import FilterRelatedMixin
 from rest_framework_json_api import serializers
 from rest_framework_json_api.relations import ResourceRelatedField
 from rest_framework_json_api.utils import format_relation_name

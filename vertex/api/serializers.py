@@ -20,9 +20,9 @@ from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handl
     VerificationBaseSerializer
 from rest_framework_jwt.settings import api_settings
 
-from noss import tasks
-from noss.api.utils import totp_digits, get_otpauth_url
-from noss.settings import app_settings
+from vertex import tasks
+from vertex.api.utils import totp_digits, get_otpauth_url
+from vertex.settings import app_settings
 from rest_framework_json_api import serializers, relations
 
 

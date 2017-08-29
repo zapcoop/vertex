@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from noss.models import AbstractDatedModel
+from vertex.models import AbstractDatedModel
 
 
-__author__ = 'jsenecal'
+__author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 
 
 class BlacklistedEmail(AbstractDatedModel, models.Model):

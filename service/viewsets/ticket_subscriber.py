@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from noss.api.permissions import RestrictedObjectLevelPermissions
+from vertex.api.permissions import RestrictedObjectLevelPermissions
 
 from ..serializers import TicketSubscriberSerializer
 from ..models import TicketSubscriber
