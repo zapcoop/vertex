@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
     'rules',
     'contacts',
 ]
@@ -127,4 +128,11 @@ LANGUAGES = [
     ('fr', _('French')),
 ]
 
+# modeltranslation
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
+
+# Graphene
+GRAPHENE = {
+    'SCHEMA': 'vertex.schema.schema'
+}
