@@ -57,13 +57,6 @@ class EmailAddress(AbstractDatedModel):
         if not self.person and not self.organization:
             return
 
-        from contacts.models import EmailDomain
-        # Matches email domains to see if email belongs to organization
-        domain = self.email_address.split("@")[1]
-        domain_name = EmailDomain.objects.filter(domain_name=domain).first()
-        if domain_name is not None:
-            self.organization = domain_name.organization
-
         if self.id is None and self.person is not None:
             if not self.person.email_addresses.filter(primary=True).exists():
                 self.primary = True
@@ -81,7 +74,7 @@ class EmailAddress(AbstractDatedModel):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        if self.email_address == self.person.user.email:
+        if self.person and self.person.user and self.email_address == self.person.user.email:
             return
         else:
             super().delete(*args, **kwargs)

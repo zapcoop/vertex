@@ -101,6 +101,11 @@ class Person(AbstractDatedModel):
 
     custom_avatar_url = models.URLField(blank=True)
 
+    notes = models.TextField(
+        blank=True,
+        null=True
+    )
+
     @property
     def username(self):
         return self.user.username if self.user else None

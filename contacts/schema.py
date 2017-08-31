@@ -1,4 +1,5 @@
 import graphene
+from graphene_django.filter import DjangoFilterConnectionField
 
 from graphene_django.types import DjangoObjectType
 
@@ -14,34 +15,85 @@ from contacts.models import (
 )
 
 
-class ContactGroupType(DjangoObjectType):
+class ContactGroupNode(DjangoObjectType):
     class Meta:
         model = ContactGroup
+        filter_fields = {
+            'name': ['exact', 'icontains', 'istartswith'],
+            'people': ['exact'],
+            'people__first_name': ['exact', 'icontains', 'istartswith'],
+            'people__last_name': ['exact', 'icontains', 'istartswith'],
+            'organizations': ['exact'],
+            'organizations__name': ['exact', 'icontains', 'istartswith'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class OrganizationDepartmentType(DjangoObjectType):
+class OrganizationDepartmentNode(DjangoObjectType):
     class Meta:
         model = OrganizationDepartment
+        filter_fields = {
+            'name': ['exact', 'icontains', 'istartswith'],
+            'people': ['exact'],
+            'organization': ['exact'],
+            'organization__name': ['exact', 'icontains', 'istartswith'],
+            'people__first_name': ['exact', 'icontains', 'istartswith'],
+            'people__last_name': ['exact', 'icontains', 'istartswith'],
+            'managers__first_name': ['exact', 'icontains', 'istartswith'],
+            'managers__last_name': ['exact', 'icontains', 'istartswith'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class EmailAddressType(DjangoObjectType):
+class EmailAddressNode(DjangoObjectType):
     class Meta:
         model = EmailAddress
+        filter_fields = {
+            'email_address': ['exact', 'icontains', 'istartswith'],
+            'information_type': ['exact'],
+            'person': ['exact'],
+            'organization': ['exact'],
+            'organization__name': ['exact', 'icontains', 'istartswith'],
+            'person__first_name': ['exact', 'icontains', 'istartswith'],
+            'person__last_name': ['exact', 'icontains', 'istartswith'],
+            'primary': ['exact'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class PhoneNumberType(DjangoObjectType):
+class PhoneNumberNode(DjangoObjectType):
     class Meta:
         model = PhoneNumber
+        filter_fields = {
+            'phone_number': ['exact', 'icontains', 'istartswith'],
+            'information_type': ['exact'],
+            'person': ['exact'],
+            'organization': ['exact'],
+            'organization__name': ['exact', 'icontains', 'istartswith'],
+            'person__first_name': ['exact', 'icontains', 'istartswith'],
+            'person__last_name': ['exact', 'icontains', 'istartswith'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class URLType(DjangoObjectType):
+class URLNode(DjangoObjectType):
     class Meta:
         model = URL
+        filter_fields = {
+            'url': ['exact', 'icontains', 'istartswith'],
+            'information_type': ['exact'],
+            'person': ['exact'],
+            'organization': ['exact'],
+            'organization__name': ['exact', 'icontains', 'istartswith'],
+            'person__first_name': ['exact', 'icontains', 'istartswith'],
+            'person__last_name': ['exact', 'icontains', 'istartswith'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class OrganizationType(DjangoObjectType):
-    people = graphene.List("contacts.schema.PersonType")
-    administrators = graphene.List("contacts.schema.PersonType")
+class OrganizationNode(DjangoObjectType):
+    people = graphene.List("contacts.schema.PersonNode")
+    administrators = graphene.List("contacts.schema.PersonNode")
 
     def resolve_people(self, args, context, info):
         return self.people.all()
@@ -51,66 +103,53 @@ class OrganizationType(DjangoObjectType):
 
     class Meta:
         model = Organization
+        filter_fields = {
+            'name': ['exact', 'icontains', 'istartswith'],
+            'slug': ['exact'],
+            'aliases__name': ['exact', 'icontains', 'istartswith'],
+            'people': ['exact'],
+            'administrators': ['exact'],
+            'people__first_name': ['exact', 'icontains', 'istartswith'],
+            'people__last_name': ['exact', 'icontains', 'istartswith'],
+            'administrators__first_name': ['exact', 'icontains', 'istartswith'],
+            'administrators__last_name': ['exact', 'icontains', 'istartswith'],
+            'notes': ['icontains'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class OrganizationAliasType(DjangoObjectType):
+class OrganizationAliasNode(DjangoObjectType):
     class Meta:
         model = OrganizationAlias
+        filter_fields = {
+            'name': ['exact', 'icontains', 'istartswith'],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
-class PersonType(DjangoObjectType):
+class PersonNode(DjangoObjectType):
     class Meta:
         model = Person
+        filter_fields = {
+            'first_name': ['exact', 'icontains', 'istartswith'],
+            'middle_name': ['exact', 'icontains', 'istartswith'],
+            'last_name': ['exact', 'icontains', 'istartswith'],
+            'slug': ['exact'],
+            'gender': ['exact'],
+            'notes': ['icontains'],
+            'user__username': ['exact', 'icontains'],
+            'user__is_staff': ['exact',],
+            'user__is_superuser': ['exact',],
+        }
+        interfaces = (graphene.relay.Node,)
 
 
 class Query(graphene.AbstractType):
-    contact_group = graphene.Field(
-        ContactGroupType,
-        id=graphene.Int()
-    )
-    all_contact_groups = graphene.List(ContactGroupType)
+    contact_group = graphene.relay.Node.Field(ContactGroupNode)
+    all_contact_groups = DjangoFilterConnectionField(ContactGroupNode)
 
-    organization = graphene.Field(
-        OrganizationType,
-        id=graphene.Int()
-    )
-    all_organizations = graphene.List(OrganizationType)
+    organization = graphene.relay.Node.Field(OrganizationNode)
+    all_organizations = DjangoFilterConnectionField(OrganizationNode)
 
-    person = graphene.Field(
-        PersonType,
-        id=graphene.Int()
-    )
-    all_people = graphene.List(PersonType)
-
-    def resolve_contact_group(self, args, context, info):
-        id = args.get('id')
-
-        if id is not None:
-            return ContactGroup.objects.get(pk=id)
-
-        return None
-
-    def resolve_all_contact_groups(self, args, context, info):
-        return ContactGroup.objects.prefetch_related('people', 'organizations').all()
-
-    def resolve_organization(self, args, context, info):
-        id = args.get('id')
-
-        if id is not None:
-            return Organization.objects.get(pk=id)
-
-        return None
-
-    def resolve_all_organizations(self, args, context, info):
-        return Organization.objects.all()
-
-    def resolve_person(self, args, context, info):
-        id = args.get('id')
-
-        if id is not None:
-            return Person.objects.get(pk=id)
-
-        return None
-
-    def resolve_all_people(self, args, context, info):
-        return Person.objects.all()
+    person = graphene.relay.Node.Field(PersonNode)
+    all_people = DjangoFilterConnectionField(PersonNode)

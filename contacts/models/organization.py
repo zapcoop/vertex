@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import reversion
+from uuslug import uuslug
 
 from contacts.rules.organization import is_organization_member
 from vertex import rules
@@ -13,6 +14,8 @@ __author__ = 'Jonathan Senecal <jonathan@zap.coop>'
 @reversion.register
 class Organization(AbstractDatedModel):
     """Organization model."""
+    slug = models.SlugField(editable=False)
+
     parent = models.ForeignKey(
         'self',
         verbose_name=_("Parent"),
@@ -50,6 +53,12 @@ class Organization(AbstractDatedModel):
 
     def __str__(self):
         return u"{name}".format(name=self.name)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = uuslug(self.full_name, instance=self)
+
+        super(Organization, self).save(*args, **kwargs)
 
 
 class OrganizationAlias(AbstractDatedModel):
