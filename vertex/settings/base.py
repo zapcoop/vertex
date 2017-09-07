@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'graphene_django',
     'rules',
     'contacts',
+    'sites',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,6 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 GRAPHENE = {
     'SCHEMA': 'vertex.schema.schema'
 }
+
+
+GMAPS_API_KEY = os.environ.get('GMAPS_API_KEY')
