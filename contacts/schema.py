@@ -92,8 +92,8 @@ class URLNode(DjangoObjectType):
 
 
 class OrganizationNode(DjangoObjectType):
-    people = graphene.List("contacts.schema.PersonNode")
-    administrators = graphene.List("contacts.schema.PersonNode")
+    people = graphene.relay.ConnectionField("contacts.schema.PersonNode")
+    administrators = graphene.relay.ConnectionField("contacts.schema.PersonNode")
 
     def resolve_people(self, args, context, info):
         return self.people.all()

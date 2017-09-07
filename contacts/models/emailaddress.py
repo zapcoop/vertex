@@ -49,7 +49,9 @@ class EmailAddress(AbstractDatedModel):
 
     def clean(self):
         if not self.person and not self.organization:
-            raise ValidationError(_('Either a person or an organization must be specified, both cannot be left blank'))
+            raise ValidationError(
+                _('Either a person or an organization must be specified, both cannot be left blank')
+            )
 
     @transaction.atomic
     def save(self, *args, **kwargs):

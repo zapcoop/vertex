@@ -10,6 +10,11 @@ from sites.models import (
 
 
 class PlaceNode(DjangoObjectType):
+    address_components = graphene.relay.ConnectionField("sites.schema.AddressComponentNode")
+
+    def resolve_address_components(self, args, context, info):
+        return self.address_components.all()
+
     class Meta:
         model = Place
         filter_fields = {
