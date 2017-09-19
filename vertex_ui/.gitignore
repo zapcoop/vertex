@@ -1,6 +1,4 @@
-# Include your project-specific ignores in this file
-# See https://help.github.com/ignore-files/ for more about ignoring files
-
+.idea/
 # Dependencies
 /node_modules
 
@@ -22,7 +20,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# VS Code
-.vscode/*
-!.vscode/snippets
-!.vscode/settings.json
