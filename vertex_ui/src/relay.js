@@ -18,7 +18,7 @@ function fetchQuery(
   return fetch(
     process.env.REACT_APP_API
       ? `${process.env.REACT_APP_API}/graphql`
-      : 'https://graphql-demo.kriasoft.com/',
+      : 'http://localhost:8000/graphql',
     {
       method: 'POST',
       headers: {

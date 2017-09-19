@@ -67,7 +67,10 @@ if (!text.includes('babel-plugin-transform-export-extensions')) {
 // -----------------------------------------------------------------------------
 if (process.argv.includes('--download-schema')) {
   file = fs.createWriteStream('./src/schema.graphql');
-  https.get('https://graphql-demo.kriasoft.com/schema', resp => {
+  let schema_uri = process.env.REACT_APP_API
+    ? `${process.env.REACT_APP_API}/graphql/schema`
+    : 'http://localhost:8000/graphql/schema';
+  https.get(schema_uri, resp => {
     if (resp.statusCode === 200) {
       resp.pipe(file);
     } else {
