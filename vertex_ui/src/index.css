@@ -1,30 +1,3 @@
-#initial-loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  background: #212121;
-  position: fixed;
-  z-index: 10000;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  transition: opacity .2s ease-out
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg)
-  }
-}
-
-#initial-loader .loader g {
-  transform-origin: 50% 50%;
-  animation: spin .5s linear infinite
-}
-
 body.loading {
   overflow: hidden !important
 }
@@ -32,7 +5,6 @@ body.loading {
 body.loaded #initial-loader {
   opacity: 0
 }
-
 .pace {
   -webkit-pointer-events: none;
   pointer-events: none;

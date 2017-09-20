@@ -1,6 +1,6 @@
 module.exports = {
   extends: ['eslint-config-react-app', 'prettier'],
-  plugins: ['prettier',],
+  plugins: ['prettier'],
   rules: {
     'prettier/prettier': [
       'error',
