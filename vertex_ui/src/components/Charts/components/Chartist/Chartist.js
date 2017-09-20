@@ -4,8 +4,6 @@ import _ from 'underscore';
 
 require('@owczar/spin-template/dist/styles/plugins.min.css');
 
-const Chartist = (props) => (
-    <ChartistGraph {...props}></ChartistGraph>
-);
+const Chartist = props => <ChartistGraph {...props} />;
 
 export default Chartist;

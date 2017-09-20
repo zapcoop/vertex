@@ -3,6 +3,6 @@ import Route from 'found/lib/Route';
 import React from 'react';
 
 // import App from './App';
-import DefaultLayout from './layouts/DefaultLayout';
+import DefaultLayout from './layouts/AdminLayout';
 
 export default makeRouteConfig(<Route path="/" Component={DefaultLayout} />);

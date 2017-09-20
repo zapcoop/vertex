@@ -1,25 +1,25 @@
-import React from 'react'
-import reactCSS from 'reactcss'
+import React from 'react';
+import reactCSS from 'reactcss';
 
-import { ColorWrap, Saturation, Hue } from 'react-color/lib/components/common'
-import PhotoshopFields from './PhotoshopFields'
-import PhotoshopPointerCircle from './PhotoshopPointerCircle'
-import PhotoshopPointer from './PhotoshopPointer'
-import PhotoshopButton from './PhotoshopButton'
-import PhotoshopPreviews from './PhotoshopPreviews'
+import { ColorWrap, Saturation, Hue } from 'react-color/lib/components/common';
+import PhotoshopFields from './PhotoshopFields';
+import PhotoshopPointerCircle from './PhotoshopPointerCircle';
+import PhotoshopPointer from './PhotoshopPointer';
+import PhotoshopButton from './PhotoshopButton';
+import PhotoshopPreviews from './PhotoshopPreviews';
 
 export class Photoshop extends React.Component {
   constructor(props) {
-    super()
+    super();
 
     this.state = {
       currentColor: props.hex,
-    }
+    };
   }
 
   render() {
     const styles = reactCSS({
-      'default': {
+      default: {
         picker: {
           background: '#DCDCDC',
           borderRadius: '4px',
@@ -30,7 +30,8 @@ export class Photoshop extends React.Component {
         head: {
           backgroundImage: 'linear-gradient(-180deg, #F0F0F0 0%, #D4D4D4 100%)',
           borderBottom: '1px solid #B1B1B1',
-          boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,.2), inset 0 -1px 0 0 rgba(0,0,0,.02)',
+          boxShadow:
+            'inset 0 1px 0 0 rgba(255,255,255,.2), inset 0 -1px 0 0 rgba(0,0,0,.02)',
           height: '23px',
           lineHeight: '24px',
           borderRadius: '4px 4px 0 0',
@@ -73,57 +74,61 @@ export class Photoshop extends React.Component {
           marginLeft: '20px',
         },
       },
-    })
+    });
 
     return (
-      <div style={ styles.picker } className="photoshop-picker">
-        <div style={ styles.head }>{ this.props.header }</div>
+      <div style={styles.picker} className="photoshop-picker">
+        <div style={styles.head}>{this.props.header}</div>
 
-        <div style={ styles.body } className="flexbox-fix">
-          <div style={ styles.saturation }>
+        <div style={styles.body} className="flexbox-fix">
+          <div style={styles.saturation}>
             <Saturation
-              hsl={ this.props.hsl }
-              hsv={ this.props.hsv }
-              pointer={ PhotoshopPointerCircle }
-              onChange={ this.props.onChange }
+              hsl={this.props.hsl}
+              hsv={this.props.hsv}
+              pointer={PhotoshopPointerCircle}
+              onChange={this.props.onChange}
             />
           </div>
-          <div style={ styles.hue }>
+          <div style={styles.hue}>
             <Hue
               direction="vertical"
-              hsl={ this.props.hsl }
-              pointer={ PhotoshopPointer }
-              onChange={ this.props.onChange }
+              hsl={this.props.hsl}
+              pointer={PhotoshopPointer}
+              onChange={this.props.onChange}
             />
           </div>
-          <div style={ styles.controls }>
-            <div style={ styles.top } className="flexbox-fix">
-              <div style={ styles.previews }>
+          <div style={styles.controls}>
+            <div style={styles.top} className="flexbox-fix">
+              <div style={styles.previews}>
                 <PhotoshopPreviews
-                  rgb={ this.props.rgb }
-                  currentColor={ this.state.currentColor }
+                  rgb={this.props.rgb}
+                  currentColor={this.state.currentColor}
                 />
               </div>
-              <div style={ styles.actions }>
-                <PhotoshopButton label="OK" onClick={ this.props.onAccept } active />
-                <PhotoshopButton label="Cancel" onClick={ this.props.onCancel } />
+              <div style={styles.actions}>
+                <PhotoshopButton
+                  label="OK"
+                  onClick={this.props.onAccept}
+                  active
+                />
+                <PhotoshopButton label="Cancel" onClick={this.props.onCancel} />
                 <PhotoshopFields
-                  onChange={ this.props.onChange }
-                  rgb={ this.props.rgb }
-                  hsv={ this.props.hsv }
-                  hex={ this.props.hex }
+                  onChange={this.props.onChange}
+                  rgb={this.props.rgb}
+                  hsv={this.props.hsv}
+                  hex={this.props.hex}
                 />
               </div>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
 Photoshop.defaultProps = {
   header: 'Color Picker',
-}
+};
 
-export default ColorWrap(Photoshop)
+export default ColorWrap(Photoshop);

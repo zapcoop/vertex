@@ -1,9 +1,9 @@
-import React from 'react'
-import reactCSS from 'reactcss'
+import React from 'react';
+import reactCSS from 'reactcss';
 
 export const SliderPointer = () => {
   const styles = reactCSS({
-    'default': {
+    default: {
       picker: {
         width: '14px',
         height: '14px',
@@ -13,11 +13,9 @@ export const SliderPointer = () => {
         boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)',
       },
     },
-  })
+  });
 
-  return (
-    <div style={ styles.picker } />
-  )
-}
+  return <div style={styles.picker} />;
+};
 
-export default SliderPointer
+export default SliderPointer;

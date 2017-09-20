@@ -1,11 +1,11 @@
-import React from 'react'
-import reactCSS from 'reactcss'
+import React from 'react';
+import reactCSS from 'reactcss';
 
-import { EditableInput } from 'react-color/lib/components/common'
+import { EditableInput } from 'react-color/lib/components/common';
 
 export const CompactFields = ({ hex, rgb, onChange }) => {
   const styles = reactCSS({
-    'default': {
+    default: {
       fields: {
         display: 'flex',
         paddingBottom: '6px',
@@ -63,53 +63,75 @@ export const CompactFields = ({ hex, rgb, onChange }) => {
         color: '#585858',
       },
     },
-  })
+  });
 
   const handleChange = (data, e) => {
     if (data.r || data.g || data.b) {
-      onChange({
-        r: data.r || rgb.r,
-        g: data.g || rgb.g,
-        b: data.b || rgb.b,
-        source: 'rgb',
-      }, e)
+      onChange(
+        {
+          r: data.r || rgb.r,
+          g: data.g || rgb.g,
+          b: data.b || rgb.b,
+          source: 'rgb',
+        },
+        e,
+      );
     } else {
-      onChange({
-        hex: data.hex,
-        source: 'hex',
-      }, e)
+      onChange(
+        {
+          hex: data.hex,
+          source: 'hex',
+        },
+        e,
+      );
     }
-  }
+  };
 
   return (
-    <div style={ styles.fields } className="flexbox-fix">
-      <div style={ styles.active } />
+    <div style={styles.fields} className="flexbox-fix">
+      <div style={styles.active} />
       <EditableInput
-        style={{ wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel }}
+        style={{
+          wrap: styles.HEXwrap,
+          input: styles.HEXinput,
+          label: styles.HEXlabel,
+        }}
         label="hex"
-        value={ hex }
-        onChange={ handleChange }
+        value={hex}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="r"
-        value={ rgb.r }
-        onChange={ handleChange }
+        value={rgb.r}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="g"
-        value={ rgb.g }
-        onChange={ handleChange }
+        value={rgb.g}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="b"
-        value={ rgb.b }
-        onChange={ handleChange }
+        value={rgb.b}
+        onChange={handleChange}
       />
     </div>
-  )
-}
+  );
+};
 
-export default CompactFields
+export default CompactFields;

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { PropTypes } from 'prop-types';
 import uid from 'node-uuid';
 import _ from 'underscore';
 import classNames from 'classnames';
@@ -7,124 +8,140 @@ import Velocity from 'velocity-animate';
 import classes from './TreeNavigator.scss';
 
 class TreeNavigatorBranch extends React.Component {
-    static propTypes = {
-        children: PropTypes.node.isRequired,
-        eventKey: PropTypes.string,
-        collapsed: PropTypes.bool,
-        onActiveLinkFound: PropTypes.func,
-        onBranchSelected: PropTypes.func,
-        title: PropTypes.string.isRequired
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+    eventKey: PropTypes.string,
+    collapsed: PropTypes.bool,
+    onActiveLinkFound: PropTypes.func,
+    onBranchSelected: PropTypes.func,
+    title: PropTypes.string.isRequired,
+  };
+
+  static defaultProps = {
+    collapsed: true,
+    eventKey: uid.v4(),
+    onActiveLinkFound: () => {},
+    onBranchSelected: () => {},
+  };
+
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      hasActiveLink: false,
     };
+  }
 
-    static defaultProps = {
-        collapsed: true,
-        eventKey: uid.v4(),
-        onActiveLinkFound: () => { },
-        onBranchSelected: () => { }
-    };
+  findActiveLink(children, path) {
+    const foundLinks = React.Children.map(
+      children,
+      child => (child.props.to === path ? child : null),
+    );
 
-    constructor(props, context) {
-        super(props, context);
+    return _.first(foundLinks) || null;
+  }
 
-        this.state = {
-            hasActiveLink: false
-        };
+  makeBranchActiveIfFound(children, path) {
+    if (!!this.findActiveLink(children, path)) {
+      this.props.onActiveLinkFound(this.props.eventKey);
+      this.setState({
+        hasActiveLink: true,
+      });
+    } else {
+      this.setState({
+        hasActiveLink: false,
+      });
     }
+  }
 
-    findActiveLink(children, path) {
-        const foundLinks = React.Children.map(children,
-            child => (child.props.to === path) ? child : null);
+  animateClose(element) {
+    Velocity(
+      element,
+      {
+        height: [0, element.scrollHeight],
+      },
+      {
+        duration: 200,
+        easing: 'ease-in-out',
+      },
+    );
+  }
 
-        return _.first(foundLinks) || null;
+  animateOpen(element) {
+    Velocity(
+      element,
+      {
+        height: [element.scrollHeight, 0],
+      },
+      {
+        duration: 200,
+        easing: 'ease-in-out',
+        complete: () => {
+          element.style.height = null;
+        },
+      },
+    );
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentPath !== this.props.currentPath) {
+      this.makeBranchActiveIfFound(nextProps.children, nextProps.currentPath);
     }
+  }
 
-    makeBranchActiveIfFound(children, path) {
-        if(!!this.findActiveLink(children, path)) {
-            this.props.onActiveLinkFound(this.props.eventKey);
-            this.setState({
-                hasActiveLink: true
-            });
-        } else {
-            this.setState({
-                hasActiveLink: false
-            });
-        }
+  componentDidUpdate(prevProps) {
+    if (prevProps.collapsed !== this.props.collapsed) {
+      this.props.collapsed
+        ? this.animateClose(this.refs.branchList)
+        : this.animateOpen(this.refs.branchList);
     }
+  }
 
-    animateClose(element) {
-        Velocity(element, {
-            height: [0, element.scrollHeight]
-        }, {
-            duration: 200,
-            easing: 'ease-in-out'
-        });
+  componentDidMount() {
+    this.makeBranchActiveIfFound(this.props.children, this.props.currentPath);
+
+    if (this.props.collapsed) {
+      this.refs.branchList.style.height = 0;
     }
+  }
 
-    animateOpen(element) {
-        Velocity(element, {
-            height: [element.scrollHeight, 0]
-        }, {
-            duration: 200,
-            easing: 'ease-in-out',
-            complete: () => {
-                element.style.height = null;
-            }
-        });
-    }
+  render() {
+    const branchClass = classNames(
+      {
+        [`${classes.expanded}`]: !this.props.collapsed,
+        [`${classes.active}`]: this.state.hasActiveLink,
+      },
+      classes.treeNavigatorBranch,
+    );
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.currentPath !== this.props.currentPath) {
-            this.makeBranchActiveIfFound(nextProps.children, nextProps.currentPath);
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if(prevProps.collapsed !== this.props.collapsed) {
-            this.props.collapsed ? this.animateClose(this.refs.branchList) :
-                this.animateOpen(this.refs.branchList);
-        }
-    }
-
-    componentDidMount() {
-        this.makeBranchActiveIfFound(this.props.children, this.props.currentPath);
-
-        if(this.props.collapsed) {
-            this.refs.branchList.style.height = 0;
-        }
-    }
-
-    render() {
-        const branchClass = classNames({
-            [`${classes.expanded}`]: !this.props.collapsed,
-            [`${classes.active}`]: this.state.hasActiveLink
-        }, classes.treeNavigatorBranch);
-
-        return (
-            <li className={ branchClass }>
-                <a
-                    className={ classes.branchTitle }
-                    href='javascript: void(0)'
-                    onClick={ () => this.props.onBranchSelected(this.props.eventKey) }
-                >
-                    { this.props.title }
-                </a>
-                <ul className={ classes.treeNavigatorBranchList } ref='branchList'>
-                    {
-                        React.Children.map(this.props.children, (child, index) => {
-                            const itemClass = classNames({
-                                [`${classes.active}`]: child.props.to === this.props.currentPath
-                            }, classes.branchItem);
-                            return (
-                                <li className={ itemClass } key={ index }>
-                                    { child }
-                                </li>
-                            )
-                        })
-                    }
-                </ul>
-            </li>
-        );
-    }
+    return (
+      <li className={branchClass}>
+        <a
+          className={classes.branchTitle}
+          href="javascript: void(0)"
+          onClick={() => this.props.onBranchSelected(this.props.eventKey)}
+        >
+          {this.props.title}
+        </a>
+        <ul className={classes.treeNavigatorBranchList} ref="branchList">
+          {React.Children.map(this.props.children, (child, index) => {
+            const itemClass = classNames(
+              {
+                [`${classes.active}`]:
+                  child.props.to === this.props.currentPath,
+              },
+              classes.branchItem,
+            );
+            return (
+              <li className={itemClass} key={index}>
+                {child}
+              </li>
+            );
+          })}
+        </ul>
+      </li>
+    );
+  }
 }
 
 export default TreeNavigatorBranch;

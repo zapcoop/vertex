@@ -30,50 +30,45 @@ import subscript from './icons/subscript.svg';
 import superscript from './icons/superscript.svg';
 
 const Editor = props => {
-    const toolBar = deepExtend({}, props.toolbar, {
-        inline: {
-            bold: { icon: bold },
-            italic: { icon: italic },
-            underline: { icon: underline },
-            strikethrough: { icon: strikethrough },
-            monospace: { icon: monospace },
-            superscript: { icon: superscript },
-            subscript: { icon: subscript },
-        },
-        fontSize: { icon: fontSize },
-        list: {
-            unordered: { icon: unordered },
-            ordered: { icon: ordered },
-            indent: { icon: indent },
-            outdent: { icon: outdent },
-        },
-        textAlign: {
-            left: { icon: left },
-            center: { icon: center },
-            right: { icon: right },
-            justify: { icon: justify }
-        },
-        colorPicker: { icon: color },
-        link: {
-            link: { icon: link },
-            unlink: { icon: unlink },
-        },
-        emoji: { icon: emoji },
-        embedded: { icon: embedded },
-        image: { icon: image },
-        remove: { icon: eraser },
-        history: {
-            undo: { icon: undo },
-            redo: { icon: redo },
-        }
-    });
+  const toolBar = deepExtend({}, props.toolbar, {
+    inline: {
+      bold: { icon: bold },
+      italic: { icon: italic },
+      underline: { icon: underline },
+      strikethrough: { icon: strikethrough },
+      monospace: { icon: monospace },
+      superscript: { icon: superscript },
+      subscript: { icon: subscript },
+    },
+    fontSize: { icon: fontSize },
+    list: {
+      unordered: { icon: unordered },
+      ordered: { icon: ordered },
+      indent: { icon: indent },
+      outdent: { icon: outdent },
+    },
+    textAlign: {
+      left: { icon: left },
+      center: { icon: center },
+      right: { icon: right },
+      justify: { icon: justify },
+    },
+    colorPicker: { icon: color },
+    link: {
+      link: { icon: link },
+      unlink: { icon: unlink },
+    },
+    emoji: { icon: emoji },
+    embedded: { icon: embedded },
+    image: { icon: image },
+    remove: { icon: eraser },
+    history: {
+      undo: { icon: undo },
+      redo: { icon: redo },
+    },
+  });
 
-    return (
-        <ReactEditor
-            {..._.omit(props, ['toolbar'])}
-            toolbar={ toolBar }
-        />
-    )
+  return <ReactEditor {..._.omit(props, ['toolbar'])} toolbar={toolBar} />;
 };
 
 Editor.defaultProps = ReactEditor.defaultProps;

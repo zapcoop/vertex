@@ -1,12 +1,12 @@
-import React from 'react'
-import reactCSS from 'reactcss'
-import color from 'react-color/lib/helpers/color'
+import React from 'react';
+import reactCSS from 'reactcss';
+import color from 'react-color/lib/helpers/color';
 
-import { EditableInput } from 'react-color/lib/components/common'
+import { EditableInput } from 'react-color/lib/components/common';
 
 export const PhotoshopPicker = ({ onChange, rgb, hsv, hex }) => {
   const styles = reactCSS({
-    'default': {
+    default: {
       fields: {
         paddingTop: '5px',
         paddingBottom: '9px',
@@ -74,84 +74,122 @@ export const PhotoshopPicker = ({ onChange, rgb, hsv, hex }) => {
         paddingBottom: '7px',
       },
     },
-  })
+  });
 
   const handleChange = (data, e) => {
     if (data['#']) {
-      color.isValidHex(data['#']) && onChange({
-        hex: data['#'],
-        source: 'hex',
-      }, e)
+      color.isValidHex(data['#']) &&
+        onChange(
+          {
+            hex: data['#'],
+            source: 'hex',
+          },
+          e,
+        );
     } else if (data.r || data.g || data.b) {
-      onChange({
-        r: data.r || rgb.r,
-        g: data.g || rgb.g,
-        b: data.b || rgb.b,
-        source: 'rgb',
-      }, e)
+      onChange(
+        {
+          r: data.r || rgb.r,
+          g: data.g || rgb.g,
+          b: data.b || rgb.b,
+          source: 'rgb',
+        },
+        e,
+      );
     } else if (data.h || data.s || data.v) {
-      onChange({
-        h: data.h || hsv.h,
-        s: data.s || hsv.s,
-        v: data.v || hsv.v,
-        source: 'hsv',
-      }, e)
+      onChange(
+        {
+          h: data.h || hsv.h,
+          s: data.s || hsv.s,
+          v: data.v || hsv.v,
+          source: 'hsv',
+        },
+        e,
+      );
     }
-  }
+  };
 
   return (
-    <div style={ styles.fields }>
+    <div style={styles.fields}>
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="h"
-        value={ Math.round(hsv.h) }
-        onChange={ handleChange }
+        value={Math.round(hsv.h)}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="s"
-        value={ Math.round(hsv.s * 100) }
-        onChange={ handleChange }
+        value={Math.round(hsv.s * 100)}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="v"
-        value={ Math.round(hsv.v * 100) }
-        onChange={ handleChange }
+        value={Math.round(hsv.v * 100)}
+        onChange={handleChange}
       />
-      <div style={ styles.divider } />
+      <div style={styles.divider} />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="r"
-        value={ rgb.r }
-        onChange={ handleChange }
+        value={rgb.r}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="g"
-        value={ rgb.g }
-        onChange={ handleChange }
+        value={rgb.g}
+        onChange={handleChange}
       />
       <EditableInput
-        style={{ wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel }}
+        style={{
+          wrap: styles.RGBwrap,
+          input: styles.RGBinput,
+          label: styles.RGBlabel,
+        }}
         label="b"
-        value={ rgb.b }
-        onChange={ handleChange }
+        value={rgb.b}
+        onChange={handleChange}
       />
-      <div style={ styles.divider } />
+      <div style={styles.divider} />
       <EditableInput
-        style={{ wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel }}
+        style={{
+          wrap: styles.HEXwrap,
+          input: styles.HEXinput,
+          label: styles.HEXlabel,
+        }}
         label="#"
-        value={ hex.replace('#', '') }
-        onChange={ handleChange }
+        value={hex.replace('#', '')}
+        onChange={handleChange}
       />
-      <div style={ styles.fieldSymbols }>
-        <div style={ styles.symbol }>°</div>
-        <div style={ styles.symbol }>%</div>
-        <div style={ styles.symbol }>%</div>
+      <div style={styles.fieldSymbols}>
+        <div style={styles.symbol}>°</div>
+        <div style={styles.symbol}>%</div>
+        <div style={styles.symbol}>%</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PhotoshopPicker
+export default PhotoshopPicker;

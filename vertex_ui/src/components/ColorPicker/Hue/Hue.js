@@ -1,12 +1,19 @@
-import React from 'react'
-import reactCSS from 'reactcss'
+import React from 'react';
+import reactCSS from 'reactcss';
 
-import { ColorWrap, Hue } from 'react-color/lib/components/common'
-import HuePointer from './HuePointer'
+import { ColorWrap, Hue } from 'react-color/lib/components/common';
+import HuePointer from './HuePointer';
 
-export const HuePicker = ({ width, height, onChange, hsl, direction, pointer }) => {
+export const HuePicker = ({
+  width,
+  height,
+  onChange,
+  hsl,
+  direction,
+  pointer,
+}) => {
   const styles = reactCSS({
-    'default': {
+    default: {
       picker: {
         position: 'relative',
         width,
@@ -16,29 +23,29 @@ export const HuePicker = ({ width, height, onChange, hsl, direction, pointer }) 
         radius: '2px',
       },
     },
-  })
+  });
 
   // Overwrite to provide pure hue color
-  const handleChange = (data) => onChange({ a: 1, h: data.h, l: 0.5, s: 1 })
+  const handleChange = data => onChange({ a: 1, h: data.h, l: 0.5, s: 1 });
 
   return (
-    <div style={ styles.picker } className="hue-picker">
+    <div style={styles.picker} className="hue-picker">
       <Hue
-        { ...styles.hue }
-        hsl={ hsl }
-        pointer={ pointer }
-        onChange={ handleChange }
-        direction={ direction }
+        {...styles.hue}
+        hsl={hsl}
+        pointer={pointer}
+        onChange={handleChange}
+        direction={direction}
       />
     </div>
-  )
-}
+  );
+};
 
 HuePicker.defaultProps = {
   width: '316px',
   height: '16px',
   direction: 'horizontal',
   pointer: HuePointer,
-}
+};
 
-export default ColorWrap(HuePicker)
+export default ColorWrap(HuePicker);

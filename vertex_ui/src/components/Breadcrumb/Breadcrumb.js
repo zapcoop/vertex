@@ -7,32 +7,27 @@ import classes from './Breadcrumb.scss';
 /*
     Extended ReactBootstrap Breadcrumb. Adds noBackground prop.
 */
-const Breadcrumb = (props) => {
-    const {
-        children,
-        className,
-        noBackground,
-        ...otherProps
-    } = props;
+const Breadcrumb = props => {
+  const { children, className, noBackground, ...otherProps } = props;
 
-    const breadCrumbClass = classNames(className, classes.breadCrumb, {
-        [`${classes.noBackground}`]: props.noBackground
-    });
+  const breadCrumbClass = classNames(className, classes.breadCrumb, {
+    [`${classes.noBackground}`]: props.noBackground,
+  });
 
-    return (
-        <ReactBootstrapBreadcrumb {...otherProps} className={ breadCrumbClass }>
-            { children }
-        </ReactBootstrapBreadcrumb>
-    );
+  return (
+    <ReactBootstrapBreadcrumb {...otherProps} className={breadCrumbClass}>
+      {children}
+    </ReactBootstrapBreadcrumb>
+  );
 };
 
 Breadcrumb.propTypes = {
-    noBackground: React.PropTypes.bool
-}
+  noBackground: React.PropTypes.bool,
+};
 
 Breadcrumb.defaultProps = {
-    noBackground: false
-}
+  noBackground: false,
+};
 
 Breadcrumb.Item = ReactBootstrapBreadcrumb.Item;
 

@@ -1,9 +1,9 @@
-import React from 'react'
-import reactCSS from 'reactcss'
+import React from 'react';
+import reactCSS from 'reactcss';
 
 export const PhotoshopPointerCircle = () => {
   const styles = reactCSS({
-    'default': {
+    default: {
       triangle: {
         width: 0,
         height: 0,
@@ -40,19 +40,19 @@ export const PhotoshopPointerCircle = () => {
         transform: 'translate(-8px, -5px)',
       },
     },
-  })
+  });
 
   return (
-    <div style={ styles.pointer }>
-      <div style={ styles.left }>
-        <div style={ styles.leftInside } />
+    <div style={styles.pointer}>
+      <div style={styles.left}>
+        <div style={styles.leftInside} />
       </div>
 
-      <div style={ styles.right }>
-        <div style={ styles.rightInside } />
+      <div style={styles.right}>
+        <div style={styles.rightInside} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PhotoshopPointerCircle
+export default PhotoshopPointerCircle;

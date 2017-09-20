@@ -1,24 +1,25 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { PropTypes } from 'prop-types';
 
 import HighchartBase, { connect } from './../HighchartBase';
 
 const highStockConfig = {
-    chart: {
-        type: 'line'
-    },
-    xAxis: { },
-    yAxis: { },
-    plotOptions: { }
+  chart: {
+    type: 'line',
+  },
+  xAxis: {},
+  yAxis: {},
+  plotOptions: {},
 };
 
 class HighStock extends HighchartBase {
-    constructor(props, context) {
-        super(props, context);
-    }
+  constructor(props, context) {
+    super(props, context);
+  }
 
-    isHighstock() {
-        return true;
-    }
+  isHighstock() {
+    return true;
+  }
 }
 
 export default connect(HighStock);
