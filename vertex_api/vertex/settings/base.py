@@ -30,7 +30,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'modeltranslation',  # modeltranslation must be put before django.contrib.admin
+    'modeltranslation',  # modeltranslation must be added before django.contrib.admin
+    'material',
+    'material.admin',  # material.admin must be added before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,11 +135,9 @@ LANGUAGES = [
 # modeltranslation
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 
-
 # Graphene
 GRAPHENE = {
     'SCHEMA': 'vertex.schema.schema'
 }
-
 
 GMAPS_API_KEY = os.environ.get('GMAPS_API_KEY')

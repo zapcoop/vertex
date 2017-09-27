@@ -19,3 +19,4 @@ six==1.10.0
 sqlparse==0.2.3
 traitlets==4.3.2
 wcwidth==0.1.7
+django-material==1.0.0
