@@ -84,6 +84,42 @@ class AddressComponent(models.Model):
         )
 
 
+class RouteManager(models.Manager):
+    def get_queryset(self):
+        return super(RouteManager, self).get_queryset().filter(component_type='route')
+
+
+class Route(AddressComponent):
+    class Meta:
+        proxy = True
+
+    objects = RouteManager()
+
+
+class CountryManager(models.Manager):
+    def get_queryset(self):
+        return super(CountryManager, self).get_queryset().filter(component_type='country')
+
+
+class Country(AddressComponent):
+    class Meta:
+        proxy = True
+
+    objects = CountryManager()
+
+
+class LocalityManager(models.Manager):
+    def get_queryset(self):
+        return super(LocalityManager, self).get_queryset().filter(component_type='locality')
+
+
+class Locality(AddressComponent):
+    class Meta:
+        proxy = True
+
+    objects = LocalityManager()
+
+
 class Place(models.Model):
     raw_address = models.CharField(max_length=200, null=True, blank=True)
     formatted_address = models.CharField(max_length=200, editable=False)
