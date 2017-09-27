@@ -75,6 +75,19 @@ class OrganizationAlias(AbstractDatedModel):
         return '{} alias of {}'.format(self.name, self.organization.name)
 
 
+
+class ManufacturerManager(models.Manager):
+    def get_queryset(self):
+
+        return super(ManufacturerManager, self).get_queryset().filter(groups__in=1)
+
+
+class Manufacturer(Organization):
+    class Meta:
+        proxy = True
+
+    objects = ManufacturerManager()
+
 rules.add_perm('contacts.view_organization', is_superuser | is_staff | is_organization_member)
 rules.add_perm('contacts.add_organization',
                is_superuser | is_staff & has_django_permission('contacts.add_organization'))
