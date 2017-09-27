@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'rules',
     'contacts',
-    'sites',
+    'places',
 ]
 
 MIDDLEWARE = [
