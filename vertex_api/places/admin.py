@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sites.models import (
+from places.models import (
     Place,
     AddressComponentThrough
 )

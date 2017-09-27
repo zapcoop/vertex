@@ -3,7 +3,7 @@ import json
 import graphene
 from django.contrib.gis.db.models import PointField
 
-from graphene_django.converter import convert_django_field, convert_field_to_string
+from graphene_django.converter import convert_django_field
 
 @convert_django_field.register(PointField)
 def convert_point_field(field, registry=None):
@@ -11,10 +11,10 @@ def convert_point_field(field, registry=None):
 
 
 import contacts.schema
-import sites.schema
+import places.schema
 
 
-class Query(sites.schema.Query, contacts.schema.Query, graphene.ObjectType):
+class Query(places.schema.Query, contacts.schema.Query, graphene.ObjectType):
     # This class will inherit from multiple Queries
     # as we begin to add more apps to our project
     pass

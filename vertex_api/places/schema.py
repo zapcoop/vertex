@@ -3,14 +3,14 @@ from graphene_django.filter import DjangoFilterConnectionField
 
 from graphene_django.types import DjangoObjectType
 
-from sites.models import (
+from places.models import (
     Place,
     AddressComponent
 )
 
 
 class PlaceNode(DjangoObjectType):
-    address_components = graphene.relay.ConnectionField("sites.schema.AddressComponentNode")
+    address_components = graphene.relay.ConnectionField("places.schema.AddressComponentNode")
 
     def resolve_address_components(self, args, context, info):
         return self.address_components.all()
