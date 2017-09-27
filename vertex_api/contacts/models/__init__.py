@@ -54,5 +54,6 @@ from .organizationdepartment import OrganizationDepartment
 from .emailaddress import EmailAddress
 from .phonenumber import PhoneNumber
 from .url import URL
+from .place import Place
 from .organization import Organization, OrganizationAlias
 from .person import Person

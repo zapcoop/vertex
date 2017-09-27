@@ -6,7 +6,7 @@ import reversion
 from contacts.models import GENERIC_INFORMATION_TYPES
 from contacts.rules.organization import is_object_organization_admin, is_object_organization_member
 from contacts.rules.person import is_same_organization, is_object_person_manager
-from contacts.rules.url import is_url_owner
+from contacts.rules.place import is_place_owner
 from vertex import rules
 from vertex.models import AbstractDatedModel
 from vertex.rules import has_django_permission
@@ -20,8 +20,9 @@ class Place(AbstractDatedModel):
         verbose_name_plural = _('Places')
         app_label = 'contacts'
 
-    Place = models.URLField(
-        _('Place')
+    place = models.ForeignKey(
+        'places.Place',
+        related_name='contacts'
     )
     information_type = models.CharField(
         choices=GENERIC_INFORMATION_TYPES,
