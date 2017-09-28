@@ -1,13 +1,13 @@
 from inventory.models.assets import (
     State,
-    ItemState,
-    Item,
-    ItemGroup
+    AssetState,
+    Asset,
+    AssetGroup
 )
 
 from inventory.models.inventory import (
-    Inventory,
-    ItemTemplate,
+    Stockroom,
+    BaseItem,
     InventoryCheckPoint,
     InventoryCPQty,
     InventoryTransaction,

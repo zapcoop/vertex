@@ -2,14 +2,14 @@ from django.contrib import admin
 
 from inventory.models import (
     State,
-    ItemState,
-    Item,
-    ItemGroup
+    AssetState,
+    Asset,
+    AssetGroup
 )
 
 from inventory.models import (
-    Inventory,
-    ItemTemplate,
+    Stockroom,
+    BaseItem,
     InventoryCheckPoint,
     InventoryCPQty,
     InventoryTransaction,
@@ -27,9 +27,9 @@ from inventory.models import (
 )
 
 admin.site.register(State)
-admin.site.register(ItemState)
-admin.site.register(Item)
-admin.site.register(ItemGroup)
+admin.site.register(AssetState)
+admin.site.register(Asset)
+admin.site.register(AssetGroup)
 
 
 class ItemTemplateAdmin(admin.ModelAdmin):
@@ -67,5 +67,5 @@ admin.site.register(PurchaseOrder, PurchaseOrderAdmin)
 admin.site.register(PurchaseOrderItem)
 
 admin.site.register(Log)
-admin.site.register(ItemTemplate, ItemTemplateAdmin)
-admin.site.register(Inventory)
+admin.site.register(BaseItem, ItemTemplateAdmin)
+admin.site.register(Stockroom)

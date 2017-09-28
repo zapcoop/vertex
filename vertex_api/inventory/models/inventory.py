@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from vertex.models import AbstractDatedModel
 
 
-class ItemTemplate(AbstractDatedModel):
+class BaseItem(AbstractDatedModel):
     manufacturer = models.ForeignKey('contacts.Manufacturer', related_name='item_templates',
                                      on_delete=models.PROTECT)
     model = models.CharField(max_length=50)
@@ -32,8 +32,8 @@ class ItemTemplate(AbstractDatedModel):
         unique_together = (
             ('manufacturer', 'model')
         )
-        verbose_name = _('Item template')
-        verbose_name_plural = _('Item templates')
+        verbose_name = _('Base item')
+        verbose_name_plural = _('Base items')
         app_label = 'inventory'
 
 
@@ -53,7 +53,7 @@ class Log(models.Model):
         app_label = 'inventory'
 
 
-class Inventory(models.Model):
+class Stockroom(models.Model):
     name = models.CharField(max_length=32, verbose_name=_('Name'))
     location = models.ForeignKey('places.Place', verbose_name=_('Location'))
 
@@ -61,15 +61,15 @@ class Inventory(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = _('Inventory')
+        verbose_name = _('Stockroom')
         verbose_name_plural = _('Inventories')
         app_label = 'inventory'
 
 
 class InventoryCheckPoint(models.Model):
-    inventory = models.ForeignKey(Inventory, verbose_name=_('Inventory'))
+    stockroom = models.ForeignKey(Stockroom, verbose_name=_('Stockroom'))
     datetime = models.DateTimeField(default=timezone.now, verbose_name=_('Date & time'))
-    supplies = models.ManyToManyField(ItemTemplate, blank=True, through='InventoryCPQty',
+    supplies = models.ManyToManyField(BaseItem, blank=True, through='InventoryCPQty',
                                       verbose_name=_('Supplies'))
 
     class Meta:
@@ -77,7 +77,7 @@ class InventoryCheckPoint(models.Model):
 
 
 class InventoryCPQty(models.Model):
-    supply = models.ForeignKey(ItemTemplate, verbose_name=_('Supply'))
+    supply = models.ForeignKey(BaseItem, verbose_name=_('Supply'))
     check_point = models.ForeignKey(InventoryCheckPoint, verbose_name=_('Check point'))
     quantity = models.IntegerField(verbose_name=_('Quantity'))
 
@@ -86,28 +86,28 @@ class InventoryCPQty(models.Model):
 
 
 class InventoryTransaction(models.Model):
-    inventory = models.ForeignKey(Inventory, related_name='transactions',
-                                  verbose_name=_('Inventory'))
-    supply = models.ForeignKey(ItemTemplate, verbose_name=_('Supply'))
+    stockroom = models.ForeignKey(Stockroom, related_name='transactions',
+                                  verbose_name=_('Stockroom'))
+    supply = models.ForeignKey(BaseItem, verbose_name=_('Supply'))
     quantity = models.IntegerField(verbose_name=_('Quantity'))
     date = models.DateField(default=timezone.now, verbose_name=_('Date'))
     notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
 
     class Meta:
-        verbose_name = _('Inventory transaction')
-        verbose_name_plural = _('Inventory transactions')
+        verbose_name = _('Stockroom transaction')
+        verbose_name_plural = _('Stockroom transactions')
         ordering = ['-date', '-id']
         app_label = 'inventory'
 
     def __str__(self):
-        return "%s: '%s' qty=%s @ %s" % (self.inventory, self.supply, self.quantity, self.date)
+        return "%s: '%s' qty=%s @ %s" % (self.stockroom, self.supply, self.quantity, self.date)
 
 #
-# register(ItemTemplate, _('Templates'), ['description', 'brand', 'model', 'part_number', 'notes'])
+# register(BaseItem, _('Templates'), ['description', 'brand', 'model', 'part_number', 'notes'])
 # register(Location, _('Locations'),
 #          ['name', 'address_line1', 'address_line2', 'address_line3', 'address_line4',
 #           'phone_number1', 'phone_number2'])
-# register(Inventory, _('Inventory'), ['name', 'location__name'])
+# register(Stockroom, _('Stockroom'), ['name', 'location__name'])
 # register(Supplier, _('Supplier'),
 #          ['name', 'address_line1', 'address_line2', 'address_line3', 'address_line4',
 #           'phone_number1', 'phone_number2', 'notes'])

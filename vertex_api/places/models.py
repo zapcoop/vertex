@@ -196,7 +196,6 @@ class Place(models.Model):
             )
 
     def save(self, *args, **kwargs):
-        global place
         if self.pk is not None:
             prev_obj = self.objects.get(pk=self.pk)
             self.raw_address = prev_obj.raw_address

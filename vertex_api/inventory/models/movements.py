@@ -44,12 +44,12 @@ class PurchaseRequest(models.Model):
 class PurchaseRequestItem(models.Model):
     purchase_request = models.ForeignKey(PurchaseRequest, related_name='items',
                                          verbose_name=_('Purchase request'))
-    item_template = models.ForeignKey('inventory.ItemTemplate', verbose_name=_('Item template'))
+    base_item = models.ForeignKey('inventory.BaseItem', verbose_name=_('Asset template'))
     qty = models.PositiveIntegerField(verbose_name=_('Quantity'))
     notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
 
     def __str__(self):
-        return str(self.item_template)
+        return str(self.base_item)
 
     class Meta:
         verbose_name = _('Purchase request item')
@@ -106,7 +106,7 @@ class PurchaseOrderItemStatus(models.Model):
 class PurchaseOrderItem(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, related_name='items',
                                        verbose_name=_('Purchase order'))
-    item_template = models.ForeignKey('inventory.ItemTemplate', verbose_name=_('Item template'))
+    base_item = models.ForeignKey('inventory.BaseItem', verbose_name=_('Asset template'))
     agreed_price = models.PositiveIntegerField(null=True, blank=True,
                                                verbose_name=_('Agreed price'))
     active = models.BooleanField(default=True, verbose_name=_('Active'))
@@ -117,7 +117,7 @@ class PurchaseOrderItem(models.Model):
                                                verbose_name=_('received'))
 
     def __str__(self):
-        return str(self.item_template)
+        return str(self.base_item)
 
     class Meta:
         verbose_name = _('Purchase order item')

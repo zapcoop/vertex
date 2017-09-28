@@ -167,7 +167,7 @@ STATUS_CHOICES = [
     [STATUS_PLANNED, 'Planned'],
     [STATUS_STAGED, 'Staged'],
     [STATUS_FAILED, 'Failed'],
-    [STATUS_INVENTORY, 'Inventory'],
+    [STATUS_INVENTORY, 'Stockroom'],
 ]
 
 # Bootstrap CSS classes for device stasuses

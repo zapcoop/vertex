@@ -936,7 +936,7 @@ class DeviceBay(models.Model):
 
 
 #
-# Inventory items
+# Stockroom items
 #
 
 @python_2_unicode_compatible
