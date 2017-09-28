@@ -56,7 +56,7 @@ class Organization(AbstractDatedModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = uuslug(self.full_name, instance=self)
+            self.slug = uuslug(self.name, instance=self)
 
         super(Organization, self).save(*args, **kwargs)
 
@@ -75,11 +75,9 @@ class OrganizationAlias(AbstractDatedModel):
         return '{} alias of {}'.format(self.name, self.organization.name)
 
 
-
 class ManufacturerManager(models.Manager):
     def get_queryset(self):
-
-        return super(ManufacturerManager, self).get_queryset().filter(groups__in=1)
+        return super(ManufacturerManager, self).get_queryset().filter(groups=1)
 
 
 class Manufacturer(Organization):
@@ -87,6 +85,19 @@ class Manufacturer(Organization):
         proxy = True
 
     objects = ManufacturerManager()
+
+
+class HardwareSupplierManager(models.Manager):
+    def get_queryset(self):
+        return super(HardwareSupplierManager, self).get_queryset().filter(groups=3)
+
+
+class HardwareSupplier(Organization):
+    class Meta:
+        proxy = True
+
+    objects = HardwareSupplierManager()
+
 
 rules.add_perm('contacts.view_organization', is_superuser | is_staff | is_organization_member)
 rules.add_perm('contacts.add_organization',

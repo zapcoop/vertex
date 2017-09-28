@@ -43,7 +43,7 @@ class ContactGroup(AbstractDatedModel):
         return u"%s" % self.name
 
     def delete(self, *args, **kwargs):
-        if self.id <= 5:
+        if self.id <= 6:
             return
         else:
             super().delete(*args, **kwargs)  # Call the "real" delete() method.

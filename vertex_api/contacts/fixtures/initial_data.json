@@ -78,6 +78,21 @@
       "people": [],
       "organizations": []
     }
+  },{
+    "model": "contacts.contactgroup",
+    "pk": 6,
+    "fields": {
+      "created_at": "2017-08-29T19:42:39.047Z",
+      "modified_at": "2017-08-29T19:42:47.060Z",
+      "name": "User",
+      "name_en": "User",
+      "name_fr": "Utilisateur",
+      "description": null,
+      "description_en": null,
+      "description_fr": null,
+      "people": [],
+      "organizations": []
+    }
   },
   {
     "model": "contacts.person",
