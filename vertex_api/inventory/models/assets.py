@@ -34,8 +34,8 @@ class AssetState(models.Model):
     objects = AssetStateManager()
 
     class Meta:
-        verbose_name = _('Asset state')
-        verbose_name_plural = _('Asset state')
+        verbose_name = _('Asset state association')
+        verbose_name_plural = _('Asset state associations')
         app_label = 'inventory'
 
     def __str__(self):
@@ -46,7 +46,7 @@ class AssetState(models.Model):
 
 class Asset(AbstractDatedModel):
     base_item = models.ForeignKey('inventory.BaseItem', related_name='assets',
-                                  verbose_name=_('Asset template'))
+                                  verbose_name=_('Base item'))
     asset_tag = models.SlugField(max_length=8, verbose_name=_('Asset tag'), editable=False)
     notes = models.TextField(blank=True, null=True, verbose_name=_('Notes'))
 

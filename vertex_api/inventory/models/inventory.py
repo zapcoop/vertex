@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -62,7 +60,7 @@ class Stockroom(models.Model):
 
     class Meta:
         verbose_name = _('Stockroom')
-        verbose_name_plural = _('Inventories')
+        verbose_name_plural = _('Stockrooms')
         app_label = 'inventory'
 
 
