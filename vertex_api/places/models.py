@@ -76,7 +76,7 @@ class AddressComponent(models.Model):
     )
 
     def __str__(self):
-        return "{}, {}".format(self.component_type, self.long_name)
+        return "{}: {}".format(self.component_type.capitalize(), self.long_name)
 
     class Meta:
         unique_together = (
@@ -95,6 +95,10 @@ class Route(AddressComponent):
 
     objects = RouteManager()
 
+    def save(self, *args, **kwargs):
+        self.component_type = 'route'
+        super().save(*args, **kwargs)
+
 
 class CountryManager(models.Manager):
     def get_queryset(self):
@@ -107,6 +111,10 @@ class Country(AddressComponent):
 
     objects = CountryManager()
 
+    def save(self, *args, **kwargs):
+        self.component_type = 'country'
+        super().save(*args, **kwargs)
+
 
 class LocalityManager(models.Manager):
     def get_queryset(self):
@@ -118,6 +126,10 @@ class Locality(AddressComponent):
         proxy = True
 
     objects = LocalityManager()
+
+    def save(self, *args, **kwargs):
+        self.component_type = 'locality'
+        super().save(*args, **kwargs)
 
 
 class Place(models.Model):
