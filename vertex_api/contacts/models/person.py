@@ -27,6 +27,33 @@ GENDER_CHOICES = (
     ('N', _('Non-Binary')),
 )
 
+@reversion.register
+class PeopleOrganizations(models.Model):
+    class Meta:
+        ordering = ('organization__name', 'person__full_name')
+        verbose_name = _('Person Organization')
+        verbose_name_plural = _('People Organizations')
+        app_label = 'contacts'
+
+    person = models.ForeignKey("contacts.Person")
+    organization = models.ForeignKey("contacts.Organization")
+
+    role = models.CharField(max_length=150, blank=True)
+
+    def __str__(self):
+        if self.role:
+            return "{person}, {role} at {org}".format(
+                person = self.person.full_name,
+                role = self.role,
+                org = self.organization.name
+            )
+        else:
+            return "{person} at {org}".format(
+                person = self.person.full_name,
+                org = self.organization.name
+            )
+
+
 
 class PersonManager(Manager):
     @transaction.atomic
@@ -80,6 +107,8 @@ class Person(AbstractDatedModel):
         blank=True,
         null=True)
 
+    full_name = models.CharField(max_length=150, editable=False)
+
     gender = models.CharField(
         max_length=5,
         blank=True,
@@ -90,6 +119,13 @@ class Person(AbstractDatedModel):
         _('Date of birth'),
         blank=True,
         null=True
+    )
+
+    organizations = models.ManyToManyField(
+        "contacts.Person",
+        related_name='people',
+        through='contacts.PeopleOrganizations',
+        blank = True
     )
 
     user = models.OneToOneField(
@@ -106,15 +142,15 @@ class Person(AbstractDatedModel):
         null=True
     )
 
-    @property
+    @cached_property
     def username(self):
         return self.user.username if self.user else None
 
-    @property
+    @cached_property
     def is_staff(self):
         return self.user.is_staff if self.user else None
 
-    @property
+    @cached_property
     def is_superuser(self):
         return self.user.is_superuser if self.user else None
 
@@ -145,7 +181,7 @@ class Person(AbstractDatedModel):
         self.suffix = self.suffix.capitalize() if self.suffix else None
 
     @property
-    def full_name(self):
+    def generated_full_name(self):
         full_name = u"{first_name} {last_name}".format(
             first_name=self.first_name,
             last_name=self.last_name,
@@ -163,18 +199,15 @@ class Person(AbstractDatedModel):
         return full_name
 
     @transaction.atomic
-    def delete(self, force=False):
-        if self.user and not force:
+    def delete(self, using=None, keep_parents=False):
+        if self.user and not keep_parents:
                 self.user.groups.clear()
                 self.user.active = False
                 self.user.save()
 
-        super(Person, self).delete(force=force)
+        super(Person, self).delete(using, keep_parents)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = uuslug(self.full_name, instance=self)
-
         if self.pk is not None and self.user:
             user_obj = self.user
             prev_obj = Person.objects.get(pk=self.pk)
@@ -182,6 +215,13 @@ class Person(AbstractDatedModel):
                 user_obj.first_name = self.first_name
                 user_obj.last_name = self.last_name
                 user_obj.save()
+
+        if self.full_name != self.generated_full_name:
+            self.full_name = self.generated_full_name
+
+        if not self.slug:
+            self.slug = uuslug(self.full_name, instance=self)
+
         super(Person, self).save(*args, **kwargs)
 
     def add_email_address(self, email_address, information_type=None, organization=None):

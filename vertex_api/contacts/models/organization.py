@@ -29,15 +29,10 @@ class Organization(AbstractDatedModel):
         max_length=200
     )
 
-    people = models.ManyToManyField(
-        "contacts.Person",
-        related_name='organizations',
-
-    )
-
     administrators = models.ManyToManyField(
         "contacts.Person",
         related_name='managed_organizations',
+        blank=True
     )
 
     notes = models.TextField(

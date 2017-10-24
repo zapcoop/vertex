@@ -56,4 +56,4 @@ from .phonenumber import PhoneNumber
 from .url import URL
 from .place import Place
 from .organization import Organization, OrganizationAlias, Manufacturer, HardwareSupplier
-from .person import Person
+from .person import PeopleOrganizations, Person
