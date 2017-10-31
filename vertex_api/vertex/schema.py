@@ -11,10 +11,10 @@ def convert_point_field(field, registry=None):
 
 
 import contacts.schema
-import places.schema
+# import places.schema
 
 
-class Query(places.schema.Query, contacts.schema.Query, graphene.ObjectType):
+class Query(contacts.schema.Query, graphene.ObjectType):
     # This class will inherit from multiple Queries
     # as we begin to add more apps to our project
     pass

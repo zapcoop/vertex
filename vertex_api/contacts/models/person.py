@@ -35,8 +35,8 @@ class PeopleOrganizations(models.Model):
         verbose_name_plural = _('People Organizations')
         app_label = 'contacts'
 
-    person = models.ForeignKey("contacts.Person")
-    organization = models.ForeignKey("contacts.Organization")
+    person = models.ForeignKey("contacts.Person", related_name='roles')
+    organization = models.ForeignKey("contacts.Organization", related_name='people_roles')
 
     role = models.CharField(max_length=150, blank=True)
 
@@ -122,8 +122,7 @@ class Person(AbstractDatedModel):
     )
 
     organizations = models.ManyToManyField(
-        "contacts.Person",
-        related_name='people',
+        "contacts.Organization",
         through='contacts.PeopleOrganizations',
         blank = True
     )

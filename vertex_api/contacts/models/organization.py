@@ -35,6 +35,12 @@ class Organization(AbstractDatedModel):
         blank=True
     )
 
+    people = models.ManyToManyField(
+        "contacts.Person",
+        through='contacts.PeopleOrganizations',
+        blank=True
+    )
+
     notes = models.TextField(
         blank=True,
         null=True
