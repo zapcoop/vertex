@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('contacts', '0017_auto_20171113_1735'),
+        ('contacts', '0017_auto_20171114_1716'),
         ('places', '0002_country_locality_route'),
     ]
 
