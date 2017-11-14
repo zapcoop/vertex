@@ -1,17 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-
-class PurchaseRequestStatus(models.Model):
-    name = models.CharField(verbose_name=_('Name'), max_length=32)
-
-    class Meta:
-        verbose_name = _('Purchase request status')
-        verbose_name_plural = _('Purchase request status')
-        app_label = 'inventory'
-
-    def __str__(self):
-        return self.name
+from inventory.constants import PO_STATUS_CHOICES, PR_STATUS_CHOICES
 
 
 class PurchaseRequest(models.Model):
@@ -21,8 +11,7 @@ class PurchaseRequest(models.Model):
     required_date = models.DateField(null=True, blank=True, verbose_name=_('Date required'))
     budget = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Budget'))
     active = models.BooleanField(default=True, verbose_name=_('Active'))
-    status = models.ForeignKey(PurchaseRequestStatus, null=True, blank=True,
-                               verbose_name=_('Status'))
+    status = models.CharField(choices=PR_STATUS_CHOICES, max_length=10, verbose_name=_('Status'))
     originator = models.CharField(max_length=64, null=True, blank=True,
                                   verbose_name=_('Originator'))
     notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
@@ -44,28 +33,17 @@ class PurchaseRequest(models.Model):
 class PurchaseRequestItem(models.Model):
     purchase_request = models.ForeignKey(PurchaseRequest, related_name='items',
                                          verbose_name=_('Purchase request'))
-    base_item = models.ForeignKey('inventory.BaseItem', verbose_name=_('Asset template'))
+    item = models.ForeignKey('inventory.Item', verbose_name=_('Asset template'))
     qty = models.PositiveIntegerField(verbose_name=_('Quantity'))
     notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
 
     def __str__(self):
-        return str(self.base_item)
+        return "{purchase_request}: {item}".format(purchase_request=self.purchase_request,
+                                                   item=self.item)
 
     class Meta:
         verbose_name = _('Purchase request item')
         verbose_name_plural = _('Purchase request items')
-        app_label = 'inventory'
-
-
-class PurchaseOrderStatus(models.Model):
-    name = models.CharField(verbose_name=_('Name'), max_length=32)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = _('Purchase order status')
-        verbose_name_plural = _('Purchase order status')
         app_label = 'inventory'
 
 
@@ -80,7 +58,7 @@ class PurchaseOrder(models.Model):
     required_date = models.DateField(null=True, blank=True, verbose_name=_('Date required'))
     active = models.BooleanField(default=True, verbose_name=_('Active'))
     notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
-    status = models.ForeignKey(PurchaseOrderStatus, null=True, blank=True, verbose_name=_('Status'))
+    status = models.CharField(choices=PO_STATUS_CHOICES, max_length=10, verbose_name=_('Status'))
 
     def __str__(self):
         return '#%s (%s)' % (self.user_id if self.user_id else self.id, self.issue_date)
@@ -106,7 +84,7 @@ class PurchaseOrderItemStatus(models.Model):
 class PurchaseOrderItem(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, related_name='items',
                                        verbose_name=_('Purchase order'))
-    base_item = models.ForeignKey('inventory.BaseItem', verbose_name=_('Asset template'))
+    item = models.ForeignKey('inventory.Item', verbose_name=_('Asset template'))
     agreed_price = models.PositiveIntegerField(null=True, blank=True,
                                                verbose_name=_('Agreed price'))
     active = models.BooleanField(default=True, verbose_name=_('Active'))
@@ -117,7 +95,7 @@ class PurchaseOrderItem(models.Model):
                                                verbose_name=_('received'))
 
     def __str__(self):
-        return str(self.base_item)
+        return str(self.item)
 
     class Meta:
         verbose_name = _('Purchase order item')

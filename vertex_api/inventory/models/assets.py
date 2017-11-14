@@ -10,8 +10,8 @@ class State(models.Model):
     exclusive = models.BooleanField(default=False, verbose_name=_('Exclusive'))
 
     class Meta:
-        verbose_name = _('Asset state')
-        verbose_name_plural = _('Asset states')
+        verbose_name = _('State')
+        verbose_name_plural = _('States')
         app_label = 'inventory'
 
     def __str__(self):
@@ -34,8 +34,8 @@ class AssetState(models.Model):
     objects = AssetStateManager()
 
     class Meta:
-        verbose_name = _('Asset state association')
-        verbose_name_plural = _('Asset state associations')
+        verbose_name = _('Asset state')
+        verbose_name_plural = _('Asset states')
         app_label = 'inventory'
 
     def __str__(self):
@@ -45,7 +45,7 @@ class AssetState(models.Model):
 
 
 class Asset(AbstractDatedModel):
-    base_item = models.ForeignKey('inventory.BaseItem', related_name='assets',
+    item = models.ForeignKey('inventory.Item', related_name='assets',
                                   verbose_name=_('Base item'))
     asset_tag = models.SlugField(max_length=8, verbose_name=_('Asset tag'), editable=False)
     notes = models.TextField(blank=True, null=True, verbose_name=_('Notes'))
@@ -84,7 +84,7 @@ class Asset(AbstractDatedModel):
         states = ', '.join(
             [assetstate.state.name for assetstate in AssetState.objects.states_for_asset(self)])
         return "#%s, '%s' %s" % (
-            self.asset_tag, self.base_item.description, states and '(%s)' % states)
+            self.asset_tag, self.item.description, states and '(%s)' % states)
 
     @property
     def is_orphan(self):
@@ -97,7 +97,7 @@ class Asset(AbstractDatedModel):
 
     class Meta:
         ordering = ['asset_tag']
-        unique_together = (('base_item', 'serial_number'))
+        unique_together = (('item', 'serial_number'))
         verbose_name = _('Asset')
         verbose_name_plural = _('Assets')
         app_label = 'inventory'
@@ -105,7 +105,7 @@ class Asset(AbstractDatedModel):
 
 class AssetGroup(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=32)
-    assets = models.ManyToManyField(Asset, blank=True, verbose_name=_('Assets'))
+    assets = models.ManyToManyField(Asset, blank=True, verbose_name=_('Assets'), related_name='asset_group')
 
     def __str__(self):
         return self.name
@@ -115,12 +115,3 @@ class AssetGroup(models.Model):
         verbose_name = _('Asset group')
         verbose_name_plural = _('Asset groups')
         app_label = 'inventory'
-
-#
-# register(AssetState, _('Asset states'), ['state__name'])
-# register(Asset, _('Assets'),
-#          ['property_number', 'notes', 'serial_number', 'person__first_name', 'person__last_name',
-#           'person__second_last_name', 'person__second_name'])
-# register(AssetGroup, _('Asset groups'), ['name'])
-# register(Person, _('People'),
-#          ['last_name', 'second_last_name', 'first_name', 'second_name', 'location__name'])

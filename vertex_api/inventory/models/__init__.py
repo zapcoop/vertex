@@ -7,19 +7,16 @@ from inventory.models.assets import (
 
 from inventory.models.inventory import (
     Stockroom,
-    BaseItem,
+    Item,
     InventoryCheckPoint,
     InventoryCPQty,
-    InventoryTransaction,
-    Log
+    InventoryTransaction
 )
 
 from inventory.models.movements import (
     PurchaseOrder,
     PurchaseOrderItem,
-    PurchaseOrderStatus,
     PurchaseOrderItemStatus,
     PurchaseRequest,
-    PurchaseRequestItem,
-    PurchaseRequestStatus
+    PurchaseRequestItem
 )

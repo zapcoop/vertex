@@ -9,21 +9,19 @@ from inventory.models import (
 
 from inventory.models import (
     Stockroom,
-    BaseItem,
+    Item,
     InventoryCheckPoint,
     InventoryCPQty,
     InventoryTransaction,
-    Log
 )
 
 from inventory.models import (
     PurchaseOrder,
     PurchaseOrderItem,
-    PurchaseOrderStatus,
     PurchaseOrderItemStatus,
     PurchaseRequest,
-    PurchaseRequestItem,
-    PurchaseRequestStatus
+    PurchaseRequestItem
+
 )
 
 admin.site.register(State)
@@ -32,8 +30,8 @@ admin.site.register(Asset)
 admin.site.register(AssetGroup)
 
 
-class ItemTemplateAdmin(admin.ModelAdmin):
-    filter_horizontal = ('supplies', 'suppliers')
+class ItemAdmin(admin.ModelAdmin):
+    filter_horizontal = ('parts', 'suppliers')
 
 
 class PurchaseRequestItemInline(admin.StackedInline):
@@ -58,14 +56,11 @@ class PurchaseOrderAdmin(admin.ModelAdmin):
     inlines = [PurchaseOrderItemInline]
 
 
-admin.site.register(PurchaseRequestStatus)
 admin.site.register(PurchaseRequest, PurchaseRequestAdmin)
 admin.site.register(PurchaseRequestItem)
-admin.site.register(PurchaseOrderStatus)
 admin.site.register(PurchaseOrderItemStatus)
 admin.site.register(PurchaseOrder, PurchaseOrderAdmin)
 admin.site.register(PurchaseOrderItem)
 
-admin.site.register(Log)
-admin.site.register(BaseItem, ItemTemplateAdmin)
+admin.site.register(Item, ItemAdmin)
 admin.site.register(Stockroom)
