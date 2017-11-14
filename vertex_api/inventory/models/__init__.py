@@ -13,7 +13,7 @@ from inventory.models.inventory import (
     InventoryTransaction
 )
 
-from inventory.models.movements import (
+from inventory.models.provisioning import (
     PurchaseOrder,
     PurchaseOrderItem,
     PurchaseOrderItemStatus,
