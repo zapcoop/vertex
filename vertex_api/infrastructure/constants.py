@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+
 # Parent/child device roles
 SUBDEVICE_ROLE_PARENT = True
 SUBDEVICE_ROLE_CHILD = False
@@ -11,8 +13,8 @@ SUBDEVICE_ROLE_CHOICES = (
 IFACE_ORDERING_POSITION = 1
 IFACE_ORDERING_NAME = 2
 IFACE_ORDERING_CHOICES = [
-    [IFACE_ORDERING_POSITION, 'Slot/position'],
-    [IFACE_ORDERING_NAME, 'Name (alphabetically)']
+    [IFACE_ORDERING_POSITION, _('Slot/position')],
+    [IFACE_ORDERING_NAME, _('Name (alphabetically)')]
 ]
 
 # Interface form factors
@@ -57,19 +59,20 @@ IFACE_FF_STACKWISE_PLUS = 5050
 IFACE_FF_FLEXSTACK = 5100
 IFACE_FF_FLEXSTACK_PLUS = 5150
 IFACE_FF_JUNIPER_VCP = 5200
-# Other
+# Other / Unknown
 IFACE_FF_OTHER = 32767
+IFACE_FF_Unknown = 32768
 
 IFACE_FF_CHOICES = [
     [
-        'Virtual interfaces',
+        _('Virtual interfaces'),
         [
             [IFACE_FF_VIRTUAL, 'Virtual'],
             [IFACE_FF_LAG, 'Link Aggregation Group (LAG)'],
         ]
     ],
     [
-        'Ethernet (fixed)',
+        _('Ethernet (fixed)'),
         [
             [IFACE_FF_100ME_FIXED, '100BASE-TX (10/100ME)'],
             [IFACE_FF_1GE_FIXED, '1000BASE-T (1GE)'],
@@ -78,7 +81,7 @@ IFACE_FF_CHOICES = [
         ]
     ],
     [
-        'Ethernet (modular)',
+        _('Ethernet (modular)'),
         [
             [IFACE_FF_1GE_GBIC, 'GBIC (1GE)'],
             [IFACE_FF_1GE_SFP, 'SFP (1GE)'],
@@ -93,7 +96,7 @@ IFACE_FF_CHOICES = [
         ]
     ],
     [
-        'Wireless',
+        _('Wireless'),
         [
             [IFACE_FF_80211A, 'IEEE 802.11a'],
             [IFACE_FF_80211G, 'IEEE 802.11b/g'],
@@ -103,7 +106,7 @@ IFACE_FF_CHOICES = [
         ]
     ],
     [
-        'FibreChannel',
+        _('FibreChannel'),
         [
             [IFACE_FF_1GFC_SFP, 'SFP (1GFC)'],
             [IFACE_FF_2GFC_SFP, 'SFP (2GFC)'],
@@ -113,7 +116,7 @@ IFACE_FF_CHOICES = [
         ]
     ],
     [
-        'Serial',
+        _('Serial'),
         [
             [IFACE_FF_T1, 'T1 (1.544 Mbps)'],
             [IFACE_FF_E1, 'E1 (2.048 Mbps)'],
@@ -122,7 +125,7 @@ IFACE_FF_CHOICES = [
         ]
     ],
     [
-        'Stacking',
+        _('Stacking'),
         [
             [IFACE_FF_STACKWISE, 'Cisco StackWise'],
             [IFACE_FF_STACKWISE_PLUS, 'Cisco StackWise Plus'],
@@ -132,7 +135,7 @@ IFACE_FF_CHOICES = [
         ]
     ],
     [
-        'Other',
+        _('Other/Unknown'),
         [
             [IFACE_FF_OTHER, 'Other'],
         ]
@@ -170,8 +173,8 @@ STATUS_CHOICES = [
     [STATUS_INVENTORY, 'Stockroom'],
 ]
 
-# Bootstrap CSS classes for device stasuses
-DEVICE_STATUS_CLASSES = {
+# CSS classes for device stasuses
+DEVICE_STATUS_CSS = {
     0: 'warning',
     1: 'success',
     2: 'info',
