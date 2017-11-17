@@ -59,7 +59,7 @@ class DeviceDefinition(AbstractDatedModel):
     )
 
     class Meta:
-        pass
+        app_label = 'infrastructure'
 
     def __str__(self):
         return str(self.item)
@@ -115,6 +115,7 @@ class AbstractDeviceDefinitionTemplateModel(AbstractDatedModel):
         abstract = True
         ordering = ['device_definition', 'name']
         unique_together = ['device_definition', 'name']
+        app_label = 'infrastructure'
 
 
 class SerialPortTemplate(AbstractDeviceDefinitionTemplateModel):
@@ -122,7 +123,7 @@ class SerialPortTemplate(AbstractDeviceDefinitionTemplateModel):
     A template for a ConsoleServerPort to be created for a new Device.
     """
     device_definition = models.ForeignKey(
-        'inventory.DeviceDefinition',
+        'infrastructure.DeviceDefinition',
         related_name='serial_port_templates',
         on_delete=models.CASCADE
     )
@@ -133,7 +134,7 @@ class PowerPortTemplate(AbstractDeviceDefinitionTemplateModel):
     A template for a PowerPort to be created for a new Device.
     """
     device_definition = models.ForeignKey(
-        'inventory.DeviceDefinition',
+        'infrastructure.DeviceDefinition',
         related_name='power_port_templates',
         on_delete=models.CASCADE
     )
@@ -144,7 +145,7 @@ class PowerOutletTemplate(AbstractDeviceDefinitionTemplateModel):
     A template for a PowerOutlet to be created for a new Device.
     """
     device_definition = models.ForeignKey(
-        'inventory.DeviceDefinition',
+        'infrastructure.DeviceDefinition',
         related_name='power_outlet_templates',
         on_delete=models.CASCADE
     )
@@ -155,7 +156,7 @@ class InterfaceTemplate(AbstractDeviceDefinitionTemplateModel):
     A template for a physical data interface on a new Device.
     """
     device_definition = models.ForeignKey(
-        'inventory.DeviceDefinition',
+        'infrastructure.DeviceDefinition',
         related_name='interface_templates',
         on_delete=models.CASCADE
     )
@@ -184,7 +185,7 @@ class DeviceBayTemplate(AbstractDeviceDefinitionTemplateModel):
     A template for a DeviceBay to be created for a new parent Device.
     """
     device_definition = models.ForeignKey(
-        'inventory.DeviceDefinition',
+        'infrastructure.DeviceDefinition',
         related_name='device_bay_templates',
         on_delete=models.CASCADE
     )
