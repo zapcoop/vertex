@@ -41,6 +41,13 @@ class Organization(AbstractDatedModel):
         blank=True
     )
 
+    groups = models.ManyToManyField(
+        'contacts.ContactGroup',
+        verbose_name=_('groups'),
+        blank=True,
+        related_name='organizations'
+    )
+
     notes = models.TextField(
         blank=True,
         null=True

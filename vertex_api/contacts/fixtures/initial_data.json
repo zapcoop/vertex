@@ -10,9 +10,7 @@
       "name_fr": "Fabricants",
       "description": null,
       "description_en": null,
-      "description_fr": null,
-      "people": [],
-      "organizations": []
+      "description_fr": null
     }
   },
   {
@@ -26,9 +24,7 @@
       "name_fr": "Fournisseurs de t\u00e9l\u00e9communications",
       "description": null,
       "description_en": null,
-      "description_fr": null,
-      "people": [],
-      "organizations": []
+      "description_fr": null
     }
   },
   {
@@ -42,9 +38,7 @@
       "name_fr": "Fournisseurs de mat\u00e9riel",
       "description": null,
       "description_en": null,
-      "description_fr": null,
-      "people": [],
-      "organizations": []
+      "description_fr": null
     }
   },
   {
@@ -58,9 +52,7 @@
       "name_fr": "Fournisseurs de services",
       "description": null,
       "description_en": null,
-      "description_fr": null,
-      "people": [],
-      "organizations": []
+      "description_fr": null
     }
   },
   {
@@ -74,9 +66,7 @@
       "name_fr": "Clients",
       "description": null,
       "description_en": null,
-      "description_fr": null,
-      "people": [],
-      "organizations": []
+      "description_fr": null
     }
   },{
     "model": "contacts.contactgroup",
@@ -89,9 +79,7 @@
       "name_fr": "Utilisateur",
       "description": null,
       "description_en": null,
-      "description_fr": null,
-      "people": [],
-      "organizations": []
+      "description_fr": null
     }
   },
   {

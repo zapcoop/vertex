@@ -21,19 +21,6 @@ class ContactGroup(AbstractDatedModel):
         null=True
     )
 
-    people = models.ManyToManyField(
-        'contacts.Person',
-        verbose_name=_('people'),
-        blank=True,
-        related_name='groups'
-    )
-    organizations = models.ManyToManyField(
-        'contacts.Organization',
-        verbose_name=_('organization'),
-        blank=True,
-        related_name='groups'
-    )
-
     class Meta:
         verbose_name = _('group')
         verbose_name_plural = _('groups')

@@ -53,6 +53,26 @@ class EmailAddress(AbstractDatedModel):
                 _('Either a person or an organization must be specified, both cannot be left blank')
             )
 
+    def __str__(self):
+        if self.organization and self.person:
+            return "{person} at {organization} <{email}>".format(
+                person = self.person.full_name,
+                organization= self.organization.name,
+                email = self.email_address
+            )
+        elif self.organization:
+            return "{organization} <{email}>".format(
+                organization= self.organization,
+                email = self.email_address
+            )
+        elif self.person:
+            return "{person} <{email}>".format(
+                person=self.person.full_name,
+                email=self.email_address
+            )
+        else:
+            return self.email_address
+
     @transaction.atomic
     def save(self, *args, **kwargs):
         # Skip saving if person and organization are blank

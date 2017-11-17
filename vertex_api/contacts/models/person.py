@@ -38,6 +38,13 @@ class PeopleOrganizations(models.Model):
     person = models.ForeignKey("contacts.Person", related_name='roles')
     organization = models.ForeignKey("contacts.Organization", related_name='people_roles')
 
+    groups = models.ManyToManyField(
+        'contacts.ContactGroup',
+        verbose_name=_('groups'),
+        blank=True,
+        related_name='people'
+    )
+
     role = models.CharField(max_length=150, blank=True)
 
     def __str__(self):
