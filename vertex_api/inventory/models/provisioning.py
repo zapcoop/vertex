@@ -5,16 +5,46 @@ from inventory.constants import PO_STATUS_CHOICES, PR_STATUS_CHOICES
 
 
 class PurchaseRequest(models.Model):
-    user_id = models.CharField(max_length=32, null=True, blank=True,
-                               verbose_name=_('User defined ID (optional)'))
-    issue_date = models.DateField(auto_now_add=True, verbose_name=_('Issue date'))
-    required_date = models.DateField(null=True, blank=True, verbose_name=_('Date required'))
-    budget = models.PositiveIntegerField(null=True, blank=True, verbose_name=_('Budget'))
-    active = models.BooleanField(default=True, verbose_name=_('Active'))
-    status = models.CharField(choices=PR_STATUS_CHOICES, max_length=10, verbose_name=_('Status'))
-    originator = models.CharField(max_length=64, null=True, blank=True,
-                                  verbose_name=_('Originator'))
-    notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
+    parent = models.ForeignKey(
+        'self',
+        related_name='children_pr_set',
+        null=True,
+        editable=False
+    )
+
+    user_id = models.CharField(
+        max_length=32,
+        blank=True,
+        verbose_name=_('User defined ID (optional)')
+    )
+    issue_date = models.DateField(
+        auto_now_add=True,
+        verbose_name=_('Issue date')
+    )
+    required_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name=_('Date required')
+    )
+    supplier_contact = models.ForeignKey(
+        'contacts.EmailAddress',
+        limit_choices_to={'organization__groups': 3},
+        blank=True,
+        null=True
+    )
+    active = models.BooleanField(
+        default=True,
+        verbose_name=_('Active')
+    )
+    status = models.CharField(
+        choices=PR_STATUS_CHOICES,
+        max_length=10,
+        verbose_name=_('Status')
+    )
+    notes = models.TextField(
+        blank=True,
+        verbose_name=_('Notes')
+    )
 
     class Meta:
         verbose_name = _('Purchase request')
@@ -24,16 +54,14 @@ class PurchaseRequest(models.Model):
     def __str__(self):
         return '#%s (%s)' % (self.user_id if self.user_id else self.id, self.issue_date)
 
-    class Meta:
-        verbose_name = _('Purchase request')
-        verbose_name_plural = _('Purchase requests')
-        app_label = 'inventory'
-
+    @property
+    def supplier(self):
+        return self.supplier_contact.organization if self.supplier_contact else None
 
 class PurchaseRequestItem(models.Model):
     purchase_request = models.ForeignKey(PurchaseRequest, related_name='items',
                                          verbose_name=_('Purchase request'))
-    item = models.ForeignKey('inventory.Item', verbose_name=_('Asset template'))
+    item = models.ForeignKey('inventory.Item', verbose_name=_('Item'))
     qty = models.PositiveIntegerField(verbose_name=_('Quantity'))
     notes = models.TextField(null=True, blank=True, verbose_name=_('Notes'))
 
@@ -84,7 +112,7 @@ class PurchaseOrderItemStatus(models.Model):
 class PurchaseOrderItem(models.Model):
     purchase_order = models.ForeignKey(PurchaseOrder, related_name='items',
                                        verbose_name=_('Purchase order'))
-    item = models.ForeignKey('inventory.Item', verbose_name=_('Asset template'))
+    item = models.ForeignKey('inventory.Item', verbose_name=_('Item'))
     agreed_price = models.PositiveIntegerField(null=True, blank=True,
                                                verbose_name=_('Agreed price'))
     active = models.BooleanField(default=True, verbose_name=_('Active'))
@@ -103,9 +131,12 @@ class PurchaseOrderItem(models.Model):
         app_label = 'inventory'
 
 # register(PurchaseRequestStatus, _('Purchase request status'), ['name'])
-# register(PurchaseRequest, _('Purchase request'), ['user_id', 'id', 'budget', 'required_date', 'status__name', 'originator'])
-# register(PurchaseRequestItem, _('Purchase request item'), ['item_template__description', 'qty', 'notes'])
+# register(PurchaseRequest, _('Purchase request'), ['user_id', 'id', 'budget', 'required_date',
+# 'status__name', 'originator'])
+# register(PurchaseRequestItem, _('Purchase request item'), ['item_template__description', 'qty',
+#  'notes'])
 # register(PurchaseOrderStatus, _('Purchase order status'), ['name'])
 # register(PurchaseOrderItemStatus, _('Purchase order item status'), ['name'])
-# register(PurchaseOrder, _('Purchase order'), ['user_id', 'id', 'required_date', 'status__name', 'supplier__name', 'notes'])
+# register(PurchaseOrder, _('Purchase order'), ['user_id', 'id', 'required_date', 'status__name',
+#  'supplier__name', 'notes'])
 # register(PurchaseOrderItem, _('Purchase order item'), ['item_template__description', 'qty'])

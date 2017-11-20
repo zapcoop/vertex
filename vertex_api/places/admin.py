@@ -21,7 +21,7 @@ class AddressComponentInline(admin.TabularInline):
 
 class PlaceAdmin(admin.ModelAdmin):
     inlines = (AddressComponentInline,)
-    readonly_fields = ('lat_long',)
+    readonly_fields = ('point',)
 
     def get_readonly_fields(self, request, obj=None):
         if obj:  # This is the case when obj is already created i.e. it's an edit

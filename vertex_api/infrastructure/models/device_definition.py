@@ -1,3 +1,5 @@
+# Heavily inspired from https://github.com/digitalocean/netbox/
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -78,9 +80,9 @@ class DeviceDefinition(AbstractDatedModel):
         if not self.has_network_interfaces and self.interface_templates.filter(
                 mgmt_only=False).count():
             raise ValidationError({
-                'has_network_interfaces': "You must remove all non-management-only interface "
-                                          "templates associated with this device before "
-                                          "declassifying it as a network device."
+                'has_network_interfaces': "You must remove all interface templates that are not "
+                                          "dedicated to management associated with this device "
+                                          "before declassifying it as a network device."
             })
 
         if self.subdevice_role != SUBDEVICE_ROLE_PARENT and self.device_bay_templates.count():
@@ -171,10 +173,6 @@ class InterfaceTemplate(AbstractDeviceDefinitionTemplateModel):
     )
 
     objects = InterfaceQuerySet.as_manager()
-
-    class Meta:
-        ordering = ['device_definition', 'name']
-        unique_together = ['device_definition', 'name']
 
     def __str__(self):
         return self.name

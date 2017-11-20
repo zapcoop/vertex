@@ -37,12 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'colorful',
+    'colorfield',
     'graphene_django',
+
     'rules',
     'contacts',
     'places',
-    'inventory'
+    'locations',
+    'inventory',
+    'infrastructure'
 ]
 
 MIDDLEWARE = [
@@ -140,3 +143,6 @@ GRAPHENE = {
 }
 
 GMAPS_API_KEY = os.environ.get('GMAPS_API_KEY')
+
+VERTEX_TAG_CHARS = 'ABCDEFGHJKMNPQRTUVWXYZ0123456789'
+VERTEX_TAG_LEN = 6

@@ -1,3 +1,5 @@
+from colorfield.fields import ColorField
+from django.conf import settings
 from django.db import models
 from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext_lazy as _
@@ -39,27 +41,53 @@ class AssetState(models.Model):
         app_label = 'inventory'
 
     def __str__(self):
-        return _('%(asset)s, %(state)s since %(date)s') % {'asset': self.asset,
-                                                           'state': self.state.name,
-                                                           'date': self.date}
+        return _('%(asset)s, %(state)s since %(date)s') % {
+            'asset': self.asset,
+            'state': self.state.name,
+            'date': self.date
+        }
 
 
 class Asset(AbstractDatedModel):
-    item = models.ForeignKey('inventory.Item', related_name='assets',
-                                  verbose_name=_('Base item'))
-    asset_tag = models.SlugField(max_length=8, verbose_name=_('Asset tag'), editable=False)
-    notes = models.TextField(blank=True, null=True, verbose_name=_('Notes'))
+    item = models.ForeignKey(
+        'inventory.Item',
+        related_name='assets',
+        verbose_name=_('Base item')
+    )
+    asset_tag = models.SlugField(
+        max_length=8,
+        verbose_name=_('Asset tag'),
+        editable=False,
+        unique=True
+    )
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_('Notes')
+    )
 
-    serial_number = models.CharField(blank=True, max_length=48, null=True,
-                                     verbose_name=_('Serial number'))
+    serial_number = models.CharField(
+        blank=True,
+        max_length=100,
+        verbose_name=_('Serial number')
+    )
 
-    assigned_to = models.ManyToManyField('contacts.Organization', verbose_name=_('Assigned to'),
-                                         blank=True, related_name='items')
+    assigned_to = models.ManyToManyField(
+        'contacts.Organization',
+        verbose_name=_('Assigned to'),
+        blank=True,
+        related_name='items'
+    )
 
-    location = models.ForeignKey('places.Place', blank=True, null=True,
-                                 verbose_name=_('General location'))
+    location = models.ForeignKey(
+        'places.Place',
+        blank=True, null=True,
+        verbose_name=_('General location')
+    )
 
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(
+        default=True
+    )
 
     def clean(self):
         pass
@@ -67,10 +95,7 @@ class Asset(AbstractDatedModel):
 
     def generate_asset_tag(self):
         if self.pk is None and not self.asset_tag:
-            asset_tag = "A-" + get_random_string(
-                length=6,
-                allowed_chars='ABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
-            )
+            asset_tag = "A-" + get_random_string(settings.VERTEX_TAG_LEN, settings.VERTEX_TAG_CHARS)
             if self.__class__.objects.filter(asset_tag=asset_tag).exists():
                 self.generate_asset_tag()
             else:
@@ -105,7 +130,8 @@ class Asset(AbstractDatedModel):
 
 class AssetGroup(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=32)
-    assets = models.ManyToManyField(Asset, blank=True, verbose_name=_('Assets'), related_name='asset_group')
+    assets = models.ManyToManyField(Asset, blank=True, verbose_name=_('Assets'),
+                                    related_name='asset_group')
 
     def __str__(self):
         return self.name

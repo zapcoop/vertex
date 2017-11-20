@@ -1,21 +1,26 @@
-from django.db import models
+### Taken from https://github.com/digitalocean/netbox/
+
+from django.db.models import QuerySet
+
 from django.db.models.expressions import RawSQL
+from .constants import IFACE_ORDERING_NAME, IFACE_ORDERING_POSITION, NONCONNECTABLE_IFACE_TYPES
 
-from infrastructure.constants import *
 
-
-class InterfaceQuerySet(models.QuerySet):
+class InterfaceQuerySet(QuerySet):
     def order_naturally(self, method=IFACE_ORDERING_POSITION):
         """
-        Naturally order interfaces by their type and numeric position. The sort method must be one of the defined
+        Naturally order interfaces by their type and numeric position. The sort method must be
+        one of the defined
         IFACE_ORDERING_CHOICES (typically indicated by a parent Device's DeviceType).
 
-        To order interfaces naturally, the `name` field is split into six distinct components: leading text (type),
+        To order interfaces naturally, the `name` field is split into six distinct components:
+        leading text (type),
         slot, subslot, position, channel, and virtual circuit:
 
             {type}{slot}/{subslot}/{position}/{subposition}:{channel}.{vc}
 
-        Components absent from the interface name are ignored. For example, an interface named GigabitEthernet1/2/3
+        Components absent from the interface name are ignored. For example, an interface named
+        GigabitEthernet1/2/3
         would be parsed as follows:
 
             name = 'GigabitEthernet'
@@ -26,13 +31,14 @@ class InterfaceQuerySet(models.QuerySet):
             channel = None
             vc = 0
 
-        The original `name` field is taken as a whole to serve as a fallback in the event interfaces do not match any of
+        The original `name` field is taken as a whole to serve as a fallback in the event
+        interfaces do not match any of
         the prescribed fields.
         """
         sql_col = '{}.name'.format(self.model._meta.db_table)
         ordering = {
             IFACE_ORDERING_POSITION: (
-                '_slot', '_subslot', '_position', '_subposition', '_channel', '_vc', '_type', '_id',
+                '_slot', '_subslot', '_position', '_subposition', '_channel', '_type', '_vc', '_id',
                 'name',
             ),
             IFACE_ORDERING_NAME: (
@@ -43,10 +49,13 @@ class InterfaceQuerySet(models.QuerySet):
 
         TYPE_RE = r"SUBSTRING({} FROM '^([^0-9]+)')"
         ID_RE = r"CAST(SUBSTRING({} FROM '^(?:[^0-9]+)([0-9]+)$') AS integer)"
-        SLOT_RE = r"CAST(SUBSTRING({} FROM '^(?:[^0-9]+)([0-9]+)\/') AS integer)"
-        SUBSLOT_RE = r"CAST(SUBSTRING({} FROM '^(?:[^0-9]+)(?:[0-9]+\/)([0-9]+)') AS integer)"
-        POSITION_RE = r"CAST(SUBSTRING({} FROM '^(?:[^0-9]+)(?:[0-9]+\/){{2}}([0-9]+)') AS integer)"
-        SUBPOSITION_RE = r"CAST(SUBSTRING({} FROM '^(?:[^0-9]+)(?:[0-9]+\/){{3}}([0-9]+)') AS integer)"
+        SLOT_RE = r"CAST(SUBSTRING({} FROM '^(?:[^0-9]+)?([0-9]+)\/') AS integer)"
+        SUBSLOT_RE = r"COALESCE(CAST(SUBSTRING({} FROM '^(?:[^0-9]+)?(?:[0-9]+\/)([0-9]+)') AS " \
+                     r"integer), 0)"
+        POSITION_RE = r"COALESCE(CAST(SUBSTRING({} FROM '^(?:[^0-9]+)?(?:[0-9]+\/){{2}}([0-9]+)') " \
+                      r"AS integer), 0)"
+        SUBPOSITION_RE = r"COALESCE(CAST(SUBSTRING({} FROM '^(?:[^0-9]+)?(?:[0-9]+\/){{3}}([" \
+                         r"0-9]+)') AS integer), 0)"
         CHANNEL_RE = r"COALESCE(CAST(SUBSTRING({} FROM ':([0-9]+)(\.[0-9]+)?$') AS integer), 0)"
         VC_RE = r"COALESCE(CAST(SUBSTRING({} FROM '\.([0-9]+)$') AS integer), 0)"
 
@@ -65,8 +74,8 @@ class InterfaceQuerySet(models.QuerySet):
 
     def connectable(self):
         """
-        Return only physical interfaces which are capable of being connected to other interfaces (i.e. not virtual or
+        Return only physical interfaces which are capable of being connected to other interfaces
+        (i.e. not virtual or
         wireless).
         """
         return self.exclude(form_factor__in=NONCONNECTABLE_IFACE_TYPES)
-
