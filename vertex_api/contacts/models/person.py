@@ -25,7 +25,9 @@ GENDER_CHOICES = (
     ('M', _('Male')),
     ('F', _('Female')),
     ('N', _('Non-Binary')),
+    ('O', _('Other')),
 )
+
 
 @reversion.register
 class PeopleOrganizations(models.Model):
@@ -50,21 +52,21 @@ class PeopleOrganizations(models.Model):
     def __str__(self):
         if self.role:
             return "{person}, {role} at {org}".format(
-                person = self.person.full_name,
-                role = self.role,
-                org = self.organization.name
+                person=self.person.full_name,
+                role=self.role,
+                org=self.organization.name
             )
         else:
             return "{person} at {org}".format(
-                person = self.person.full_name,
-                org = self.organization.name
+                person=self.person.full_name,
+                org=self.organization.name
             )
-
 
 
 class PersonManager(Manager):
     @transaction.atomic
-    def create_person(self, first_name, last_name, email_address, organization=None, title=None, middle_name=None,
+    def create_person(self, first_name, last_name, email_address, organization=None, title=None,
+                      middle_name=None,
                       suffix=None,
                       nickname=None):
         instance = self.create(
@@ -131,7 +133,7 @@ class Person(AbstractDatedModel):
     organizations = models.ManyToManyField(
         "contacts.Organization",
         through='contacts.PeopleOrganizations',
-        blank = True
+        blank=True
     )
 
     user = models.OneToOneField(
@@ -207,9 +209,9 @@ class Person(AbstractDatedModel):
     @transaction.atomic
     def delete(self, using=None, keep_parents=False):
         if self.user and not keep_parents:
-                self.user.groups.clear()
-                self.user.active = False
-                self.user.save()
+            self.user.groups.clear()
+            self.user.active = False
+            self.user.save()
 
         super(Person, self).delete(using, keep_parents)
 
@@ -294,8 +296,11 @@ class Person(AbstractDatedModel):
 
 rules.add_perm('contacts.view_person', is_superuser | is_staff | is_same_organization)
 rules.add_perm('contacts.add_person',
-               is_superuser | is_object_organization_admin | is_staff & has_django_permission('contacts.add_person'))
+               is_superuser | is_object_organization_admin | is_staff & has_django_permission(
+                   'contacts.add_person'))
 rules.add_perm('contacts.change_person',
-               is_superuser | is_object_organization_admin | is_staff & has_django_permission('contacts.change_person'))
+               is_superuser | is_object_organization_admin | is_staff & has_django_permission(
+                   'contacts.change_person'))
 rules.add_perm('contacts.delete_person',
-               is_superuser | is_object_organization_admin | is_staff & has_django_permission('contacts.delete_person'))
+               is_superuser | is_object_organization_admin | is_staff & has_django_permission(
+                   'contacts.delete_person'))
