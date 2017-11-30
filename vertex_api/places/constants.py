@@ -66,3 +66,17 @@ ADDRESS_TYPES = ADDRESS_COMPONENT_TYPES + (
     'train_station',
     'transit_station',  # indicate the location of a bus, train or public transit stop.
 )
+
+AUTO_CREATE_PLACES_FOR_TYPES = (
+    'country',
+    'locality',
+    'sublocality',
+    'borough',
+    'administrative_area_level_1',
+    'administrative_area_level_2',
+    'room',
+    'floor',
+    'premise',
+    'subpremise'
+
+)

@@ -143,6 +143,13 @@ GRAPHENE = {
 }
 
 GMAPS_API_KEY = os.environ.get('GMAPS_API_KEY')
+GMAPS_ALLOWED_LOCATION_TYPES = [
+    'street_address',
+    'premise',
+    'subpremise'
+]
 
 VERTEX_TAG_CHARS = 'ABCDEFGHJKMNPQRTUVWXYZ0123456789'
 VERTEX_TAG_LEN = 6
+
+

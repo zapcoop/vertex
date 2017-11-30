@@ -46,6 +46,7 @@ class Site(AbstractDatedModel):
 
     class Meta:
         ordering = ['name']
+        app_label = 'locations'
 
     def generate_site_tag(self):
         if self.pk is None and not self.site_tag:
