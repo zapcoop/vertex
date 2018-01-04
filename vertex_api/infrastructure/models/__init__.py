@@ -3,6 +3,19 @@ from .device_definition import (
     SerialPortTemplate,
     InterfaceTemplate,
     PowerOutletTemplate,
-    PowerPortTemplate,
-    DeviceBayTemplate
+    PowerPortTemplate
+)
+
+from .interface import (
+    Interface,
+    InterfaceConnection
+)
+
+from .device import (
+    Device,
+    DeviceRole,
+    Platform,
+    PowerOutlet,
+    PowerPort,
+    SerialPort
 )

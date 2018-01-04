@@ -6,8 +6,35 @@ from infrastructure.models import (
     SerialPortTemplate,
     PowerPortTemplate,
     PowerOutletTemplate,
-    DeviceBayTemplate
+    Interface,
+    InterfaceConnection,
+    Device,
+    DeviceRole,
+    Platform,
+    PowerOutlet,
+    PowerPort,
+    SerialPort
 )
+
+
+class InterfaceInline(admin.StackedInline):
+    model = Interface
+    extra = 0
+
+
+class PowerOutletInline(admin.StackedInline):
+    model = PowerOutlet
+    extra = 0
+
+
+class PowerPortInline(admin.StackedInline):
+    model = PowerPort
+    extra = 0
+
+
+class SerialPortInline(admin.StackedInline):
+    model = SerialPort
+    extra = 0
 
 
 class InterfaceTemplateInline(admin.StackedInline):
@@ -30,14 +57,18 @@ class PowerOutletTemplateInline(admin.StackedInline):
     extra = 0
 
 
-class DeviceBayTemplateInline(admin.StackedInline):
-    model = DeviceBayTemplate
-    extra = 0
-
-
 class DeviceDefinitionAdmin(admin.ModelAdmin):
     inlines = (InterfaceTemplateInline, SerialPortTemplateInline, PowerPortTemplateInline,
-               PowerOutletTemplateInline, DeviceBayTemplateInline)
+               PowerOutletTemplateInline)
+
+
+class DeviceAdmin(admin.ModelAdmin):
+    inlines = (InterfaceInline, SerialPortInline, PowerPortInline,
+               PowerOutletInline)
 
 
 admin.site.register(DeviceDefinition, DeviceDefinitionAdmin)
+admin.site.register(Device, DeviceAdmin)
+admin.site.register(InterfaceConnection)
+admin.site.register(DeviceRole)
+admin.site.register(Platform)

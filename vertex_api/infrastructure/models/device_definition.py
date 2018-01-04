@@ -48,13 +48,7 @@ class DeviceDefinition(AbstractDatedModel):
         help_text="This type of device has one or more network interfaces that are not dedicated "
                   "to management"
     )
-    subdevice_role = models.NullBooleanField(
-        default=None,
-        verbose_name='Parent/child status',
-        choices=SUBDEVICE_ROLE_CHOICES,
-        help_text="Parent devices house child devices in device bays. Select "
-                  "\"None\" if this device type is neither a parent nor a child."
-    )
+
     notes = models.TextField(
         verbose_name=_('Notes'),
         blank=True
@@ -84,20 +78,6 @@ class DeviceDefinition(AbstractDatedModel):
                                           "dedicated to management associated with this device "
                                           "before declassifying it as a network device."
             })
-
-        if self.subdevice_role != SUBDEVICE_ROLE_PARENT and self.device_bay_templates.count():
-            raise ValidationError({
-                'subdevice_role': "You must remove all device bay templates associated with this "
-                                  "device before declassifying it as a parent device."
-            })
-
-    @property
-    def is_parent_device(self):
-        return bool(self.subdevice_role)
-
-    @property
-    def is_child_device(self):
-        return bool(self.subdevice_role is False)
 
 
 class AbstractDeviceDefinitionTemplateModel(AbstractDatedModel):
@@ -176,14 +156,3 @@ class InterfaceTemplate(AbstractDeviceDefinitionTemplateModel):
 
     def __str__(self):
         return self.name
-
-
-class DeviceBayTemplate(AbstractDeviceDefinitionTemplateModel):
-    """
-    A template for a DeviceBay to be created for a new parent Device.
-    """
-    device_definition = models.ForeignKey(
-        'infrastructure.DeviceDefinition',
-        related_name='device_bay_templates',
-        on_delete=models.CASCADE
-    )

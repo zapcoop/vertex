@@ -190,3 +190,23 @@ CONNECTION_STATUS_CHOICES = [
     [CONNECTION_STATUS_PLANNED, 'Planned'],
     [CONNECTION_STATUS_CONNECTED, 'Connected'],
 ]
+
+# Wall sides
+NORTH_SIDE = 1
+SOUTH_SIDE = 2
+WEST_SIDE = 4
+EAST_SIDE = 8
+NORTH_WEST_SIDE = 5
+NORTH_EAST_SIDE = 9
+SOUTH_WEST_SIDE = 6
+SOUTH_EAST_SIDE = 10
+SIDES = (
+    (NORTH_SIDE, _("North")),
+    (SOUTH_SIDE, _("South")),
+    (WEST_SIDE, _("West")),
+    (EAST_SIDE, _("East")),
+    (NORTH_WEST_SIDE, _("North-West")),
+    (NORTH_EAST_SIDE, _("North-East")),
+    (SOUTH_WEST_SIDE, _("South-West")),
+    (SOUTH_EAST_SIDE, _("South-East")),
+)

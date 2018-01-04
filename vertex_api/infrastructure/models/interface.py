@@ -1,8 +1,15 @@
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.db import models
+from django.utils.functional import cached_property
 
-@python_2_unicode_compatible
+from infrastructure.constants import *
+from infrastructure.querysets import InterfaceQuerySet
+
+
 class Interface(models.Model):
     """
-    A physical data interface within a Device. An Interface can connect to exactly one other Interface via the creation
+    A physical data interface within a Device. An Interface can connect to exactly one other
+    Interface via the creation
     of an InterfaceConnection.
     """
     device = models.ForeignKey('Device', related_name='interfaces', on_delete=models.CASCADE)
@@ -18,7 +25,6 @@ class Interface(models.Model):
     form_factor = models.PositiveSmallIntegerField(choices=IFACE_FF_CHOICES,
                                                    default=IFACE_FF_10GE_SFP_PLUS)
     enabled = models.BooleanField(default=True)
-    mac_address = MACAddressField(null=True, blank=True, verbose_name='MAC Address')
     mtu = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='MTU')
     mgmt_only = models.BooleanField(
         default=False,
@@ -41,7 +47,8 @@ class Interface(models.Model):
         # Virtual interfaces cannot be connected
         if self.form_factor in NONCONNECTABLE_IFACE_TYPES and self.is_connected:
             raise ValidationError({
-                'form_factor': "Virtual and wireless interfaces cannot be connected to another interface or circuit. "
+                'form_factor': "Virtual and wireless interfaces cannot be connected to another "
+                               "interface or circuit. "
                                "Disconnect the interface or choose a suitable form factor."
             })
 
@@ -63,9 +70,10 @@ class Interface(models.Model):
         # Only a LAG can have LAG members
         if self.form_factor != IFACE_FF_LAG and self.member_interfaces.exists():
             raise ValidationError({
-                'form_factor': "Cannot change interface form factor; it has LAG members ({}).".format(
-                    ", ".join([iface.name for iface in self.member_interfaces.all()])
-                )
+                'form_factor':
+                    "Cannot change interface form factor; it has LAG members ({}).".format(
+                        ", ".join([iface.name for iface in self.member_interfaces.all()])
+                    )
             })
 
     @property
@@ -82,34 +90,30 @@ class Interface(models.Model):
 
     @property
     def is_connected(self):
-        try:
-            return bool(self.circuit_termination)
-        except ObjectDoesNotExist:
-            pass
         return bool(self.connection)
 
     @property
     def connection(self):
         try:
-            return self.connected_as_a
+            return self.connected_as_near
         except ObjectDoesNotExist:
             pass
         try:
-            return self.connected_as_b
+            return self.connected_as_far
         except ObjectDoesNotExist:
             pass
         return None
 
-    @property
+    @cached_property
     def connected_interface(self):
         try:
-            if self.connected_as_a:
-                return self.connected_as_a.interface_b
+            if self.connected_as_near:
+                return self.connected_as_near.interface_far
         except ObjectDoesNotExist:
             pass
         try:
-            if self.connected_as_b:
-                return self.connected_as_b.interface_a
+            if self.connected_as_far:
+                return self.connected_as_far.interface_near
         except ObjectDoesNotExist:
             pass
         return None
@@ -117,35 +121,24 @@ class Interface(models.Model):
 
 class InterfaceConnection(models.Model):
     """
-    An InterfaceConnection represents a symmetrical, one-to-one connection between two Interfaces. There is no
-    significant difference between the interface_a and interface_b fields.
+    An InterfaceConnection represents a symmetrical, one-to-one connection between two
+    Interfaces. There is no significant difference between the interface_near and interface_far fields.
     """
-    interface_a = models.OneToOneField('Interface', related_name='connected_as_a',
-                                       on_delete=models.CASCADE)
-    interface_b = models.OneToOneField('Interface', related_name='connected_as_b',
-                                       on_delete=models.CASCADE)
+    interface_near = models.OneToOneField('Interface', related_name='connected_as_near',
+                                          on_delete=models.CASCADE)
+    interface_far = models.OneToOneField('Interface', related_name='connected_as_far',
+                                         on_delete=models.CASCADE)
     connection_status = models.BooleanField(choices=CONNECTION_STATUS_CHOICES,
                                             default=CONNECTION_STATUS_CONNECTED,
                                             verbose_name='Status')
 
-    csv_headers = ['device_a', 'interface_a', 'device_b', 'interface_b', 'connection_status']
+    notes = models.TextField(blank=True)
 
     def clean(self):
         try:
-            if self.interface_a == self.interface_b:
+            if self.interface_near == self.interface_far:
                 raise ValidationError({
-                    'interface_b': "Cannot connect an interface to itself."
+                    'interface_near': "Cannot connect an interface to itself."
                 })
         except ObjectDoesNotExist:
             pass
-
-    # Used for connections export
-    def to_csv(self):
-        return csv_format([
-            self.interface_a.device.identifier,
-            self.interface_a.name,
-            self.interface_b.device.identifier,
-            self.interface_b.name,
-            self.get_connection_status_display(),
-        ])
-
