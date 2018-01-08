@@ -18,10 +18,19 @@ class PeopleOrganizationsInline(admin.StackedInline):
     extra = 0
 
 
+class OrganizationAliasesInline(admin.TabularInline):
+    model = OrganizationAlias
+    extra = 0
+
+
 class PersonAdmin(admin.ModelAdmin):
     model = Person
 
     inlines = (PeopleOrganizationsInline,)
+
+class OrganizationAdmin(admin.ModelAdmin):
+    model = Organization
+    inlines = (OrganizationAliasesInline,)
 
 
 admin.site.register(ContactGroup)
@@ -30,6 +39,5 @@ admin.site.register(EmailAddress)
 admin.site.register(PhoneNumber)
 admin.site.register(Place)
 admin.site.register(URL)
-admin.site.register(Organization)
-admin.site.register(OrganizationAlias)
+admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(Person, PersonAdmin)
