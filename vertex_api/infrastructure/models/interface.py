@@ -13,6 +13,9 @@ class Interface(models.Model):
     of an InterfaceConnection.
     """
     device = models.ForeignKey('Device', related_name='interfaces', on_delete=models.CASCADE)
+
+    mac_address = models.OneToOneField('ipam.MACAddress', blank=True, null=True)
+
     lag = models.ForeignKey(
         'self',
         models.SET_NULL,

@@ -39,13 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'colorfield',
     'graphene_django',
+    'netfields',
 
     'rules',
     'contacts',
     'places',
     'locations',
     'inventory',
-    'infrastructure'
+    'infrastructure',
+    'ipam'
 ]
 
 MIDDLEWARE = [
