@@ -29,7 +29,7 @@ class Floor(AbstractDatedModel):
         help_text=_("Enter the elevation in meters above sea level.")
     )
 
-    site = models.ForeignKey('locations.Site')
+    location = models.ForeignKey('locations.Location')
 
     place = models.OneToOneField(
         'places.Place',

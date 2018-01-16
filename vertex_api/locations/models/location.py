@@ -16,6 +16,7 @@ class Location(AbstractDatedModel):
         blank=True,
         null=True
     )
+    formatted_address = models.CharField(max_length=200, null=True, blank=True, editable=False)
     notes = models.TextField(null=True, blank=True)
 
     def clean(self):
@@ -49,6 +50,7 @@ class Location(AbstractDatedModel):
             google_place_id = geocoded_place['place_id']
             place, created = Place.objects.get_or_create_from_place_id(google_place_id)
             self.place = place
+            self.formatted_address = self.place.formatted_address
 
 
 def save(self, *args, **kwargs):
@@ -58,11 +60,12 @@ def save(self, *args, **kwargs):
             allowed_types=settings.GMAPS_ALLOWED_LOCATION_TYPES
         )
         self.place = place
+    self.formatted_address = self.place.formatted_address
     super(Location, self).save(*args, **kwargs)
 
 
 def __str__(self):
-    return self.place.formatted_address
+    return self.formatted_address
 
 
 class Meta:
