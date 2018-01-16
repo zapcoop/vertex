@@ -167,7 +167,7 @@ class TestServiceEmailTasks(TestCase):
         email_message.from_email = self._sender_email
         email_message.to = self._recipient_email,
         email_message.cc = self._cc_emails
-        email_message.subject = 'test message subject'
+        email_message.subject = 'tests message subject'
         email_message.extra_headers['Message-Id'] = 'unique_id_goes_here'
         self.email_message_no_hashid_plain = copy.deepcopy(email_message)
 
@@ -365,12 +365,12 @@ class TestDirectlyCloseTicket(APITestCase):
     def setUp(self):
         self.user = User.objects.create(username='test_person', email='test_person@example.org')
         self.person = Person.objects.create(
-            first_name='test',
+            first_name='tests',
             last_name='person',
             user=self.user
         )
         self.ticket = Ticket.objects.create(
-            title='test ticket',
+            title='tests ticket',
             signaled_by=self.person,
             priority=5
         )
@@ -384,7 +384,7 @@ class TestDirectlyCloseTicket(APITestCase):
         self.assertFalse(self.ticket.is_closed())
 
     def test_ticket_must_not_be_already_closed(self):
-        self.ticket.close_by_signaler()  # force close it for the test
+        self.ticket.close_by_signaler()  # force close it for the tests
         self.ticket.save()
         self.client.force_authenticate(self.user)
         response = self.client.post('/api/service/tickets/{pk}/close'.format(pk=self.ticket.pk))
@@ -393,7 +393,7 @@ class TestDirectlyCloseTicket(APITestCase):
         self.assertIn("This ticket is already closed.", response.data['non_field_errors'], response.content.decode())
 
     def test_close_ticket(self):
-        comment = 'test closing a ticket'
+        comment = 'tests closing a ticket'
         self.client.force_authenticate(self.user)
         response = self.client.post(
             '/api/service/tickets/{pk}/close'.format(pk=self.ticket.pk),
@@ -422,7 +422,7 @@ class NoteTests(VerifiedForcedAuthenticationMixin, APITestCase):
 
         ticket = Ticket.objects.create(
             title='example ticket',
-            description='this is a test',
+            description='this is a tests',
             priority=3
         )
         self.update = Update.objects.create(

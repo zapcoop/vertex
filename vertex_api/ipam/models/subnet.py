@@ -1,10 +1,12 @@
 from django.db import models, transaction
 from django.core.cache import cache
+import netaddr
 
 from netfields import CidrAddressField
 
 from ipam.constants import AV_CHOICES
 from ipam.managers import SubnetManager
+
 
 # Subnets
 #
@@ -14,7 +16,7 @@ from ipam.managers import SubnetManager
 class Subnet(models.Model):
     """
     A Subnet represents an IPv4 or IPv6 network, including mask length. Subnets can
-    optionally be assigned to Sites and VRFs.
+    be assigned to Spaces and VRFs.
     A Subnet must be assigned a status and may optionally be assigned a used-defined
     Role. A Subnet can also be assigned to a VLAN where appropriate.
     """
@@ -33,7 +35,9 @@ class Subnet(models.Model):
 
     version = models.PositiveSmallIntegerField(choices=AV_CHOICES, editable=False)
 
-    space = models.ForeignKey('ipam.Space')
+    vrf = models.ForeignKey('ipam.VRF', blank=True, null=True)
+
+    space = models.ForeignKey('ipam.Space', default=1)
     vlan = models.ForeignKey('ipam.VLAN', blank=True, null=True)
 
     role = models.ManyToManyField('ipam.Role', blank=True)
@@ -41,9 +45,7 @@ class Subnet(models.Model):
     description = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
 
-
-
-    def get_direct_children_from_cidr(self):
+    def get_direct_children_subnets_from_cidr(self):
         descendants = Subnet.objects.subnet_descendants(cidr=self.cidr).order_by('cidr')
 
         if not descendants:
@@ -53,15 +55,18 @@ class Subnet(models.Model):
         root = roots[0]
 
         for subnet in descendants[1:]:
-            if subnet.cidr not in root.cidr:
+            if not subnet.cidr.overlaps(root.cidr):
                 roots.append(subnet)
                 root = subnet
 
-        return Subnet.objects.filter(pk__in=[r.pk for r in roots])
+        return Subnet.objects.filter(pk__in=[root.pk for root in roots])
 
     def save(self, *args, **kwargs):
         if cache.get('display_with_ancestors'):
             cache.delete('display_with_ancestors')
+
+        if not isinstance(self.cidr, netaddr.IPNetwork):
+            self.cidr = netaddr.IPNetwork(self.cidr)
 
         self.version = self.cidr.version
 
@@ -70,7 +75,8 @@ class Subnet(models.Model):
 
             with transaction.atomic():
                 super(Subnet, self).save(*args, **kwargs)
-                self.get_direct_children_from_cidr().update(supernet=self)
+                self.get_direct_children_subnets_from_cidr().update(supernet=self)
+
 
         else:  # instance is being updated
             old_parent = self.supernet
@@ -79,10 +85,11 @@ class Subnet(models.Model):
             with transaction.atomic():
                 self.children.update(supernet=old_parent)
                 super(Subnet, self).save(*args, **kwargs)
-                self.get_direct_children_from_cidr().update(supernet=self)
+                self.get_direct_children_subnets_from_cidr().update(supernet=self)
 
     def delete(self, *args, **kwargs):
-        if self.children.count() > 0:  # if we need to repair the tree, let SubnetManager deal with it
+        if self.children.count() > 0:  # if we need to repair the tree, let SubnetManager deal
+            # with it
             Subnet.objects.cleanup_and_delete(self)
         else:
             super(Subnet, self).delete(*args, **kwargs)

@@ -1,10 +1,14 @@
-from django.db import models
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
+from django.utils.functional import cached_property
 
-from infrastructure.models import Interface
 from ipam.constants import AV_CHOICES, IPADDRESS_STATUS_CHOICES, IPADDRESS_STATUS_ACTIVE, \
-    IPADDRESS_ROLE_CHOICES
+    IPADDRESS_ROLE_CHOICES, STATUS_CHOICE_CSS, ROLE_CHOICE_CSS
+from ipam.models import Subnet
 from vertex.models import AbstractDatedModel
 from netfields import InetAddressField
+import netaddr
 
 
 class IPAddress(AbstractDatedModel):
@@ -20,10 +24,11 @@ class IPAddress(AbstractDatedModel):
     Device can use either the inside or outside IP as its primary IP.
     """
 
-    subnet = models.ForeignKey('ipam.Subnet')
+    subnet = models.ForeignKey('ipam.Subnet', editable=False)
     address = InetAddressField()
-
     version = models.PositiveSmallIntegerField(choices=AV_CHOICES, editable=False)
+
+    interface = models.ForeignKey('infrastructure.Interface', blank=True, null=True)
 
     status = models.PositiveSmallIntegerField(
         'Status', choices=IPADDRESS_STATUS_CHOICES, default=IPADDRESS_STATUS_ACTIVE,
@@ -44,31 +49,42 @@ class IPAddress(AbstractDatedModel):
     notes = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
+
+        if not isinstance(self.address, netaddr.IPAddress):
+            self.address = netaddr.IPAddress(self.address)
+
         self.version = self.address.version
+
+        self.subnet = self.find_parent()
+
 
         super(IPAddress, self).save(*args, **kwargs)
 
-
+    def find_parent(self):
+        return Subnet.objects.filter(cidr__net_contains=self.address).order_by('-cidr').first()
 
     class Meta:
-        ordering = ['family', 'address']
+        ordering = ['version', 'address']
         verbose_name = 'IP address'
         verbose_name_plural = 'IP addresses'
+
+    @cached_property
+    def vrf(self):
+        return self.subnet.vrf
 
     def __str__(self):
         return str(self.address)
 
-    def get_absolute_url(self):
-        return reverse('ipam:ipaddress', args=[self.pk])
-
     def get_duplicates(self):
-        return IPAddress.objects.filter(vrf=self.vrf,
-                                        address__net_host=str(self.address.ip)).exclude(
+        return IPAddress.objects.filter(subnet=self.subnet,
+                                        address=self.address).exclude(
             pk=self.pk)
 
     def clean(self):
 
         if self.address:
+            # Find parent subnet
+            self.subnet = self.find_parent()
 
             # Enforce unique IP space (if applicable)
             if (self.vrf is None and settings.ENFORCE_GLOBAL_UNIQUE) or (
@@ -88,14 +104,9 @@ class IPAddress(AbstractDatedModel):
             return self.interface.device
         return None
 
-    @property
-    def virtual_machine(self):
-        if self.interface:
-            return self.interface.virtual_machine
-        return None
 
     def get_status_class(self):
-        return STATUS_CHOICE_CLASSES[self.status]
+        return STATUS_CHOICE_CSS[self.status]
 
     def get_role_class(self):
-        return ROLE_CHOICE_CLASSES[self.role]
+        return ROLE_CHOICE_CSS[self.role]
