@@ -5,7 +5,6 @@ from django.utils.functional import cached_property
 
 from ipam.constants import AV_CHOICES, IPADDRESS_STATUS_CHOICES, IPADDRESS_STATUS_ACTIVE, \
     IPADDRESS_ROLE_CHOICES, STATUS_CHOICE_CSS, ROLE_CHOICE_CSS
-from ipam.models import Subnet
 from vertex.models import AbstractDatedModel
 from netfields import InetAddressField
 import netaddr
@@ -55,13 +54,35 @@ class IPAddress(AbstractDatedModel):
 
         self.version = self.address.version
 
-        self.subnet = self.find_parent()
+        parent = self.find_parent()
 
+        if parent:
+            self.subnet = parent
+        else:
+            raise ValueError("No parent subnet found for address {}".format(self.address))
+
+        if self.is_reserved_address:
+            raise ValueError(
+                "Address {} clashes with reserved addresses for subnet {}".format(self.address,
+                                                                                  self.subnet))
 
         super(IPAddress, self).save(*args, **kwargs)
 
     def find_parent(self):
+        from .subnet import Subnet
         return Subnet.objects.filter(cidr__net_contains=self.address).order_by('-cidr').first()
+
+    @property
+    def is_reserved_address(self):
+        address_value = int(self.address)
+        parent_cidr = self.subnet.cidr
+        network_address_value = int(parent_cidr.network_address)
+        broadcast_address_value = int(parent_cidr.broadcast_address)
+        if address_value == network_address_value:
+            return True
+        if address_value == broadcast_address_value:
+            return True
+        return False
 
     class Meta:
         ordering = ['version', 'address']
@@ -77,14 +98,18 @@ class IPAddress(AbstractDatedModel):
 
     def get_duplicates(self):
         return IPAddress.objects.filter(subnet=self.subnet,
-                                        address=self.address).exclude(
-            pk=self.pk)
+                                        address=self.address).exclude(pk=self.pk)
 
     def clean(self):
 
         if self.address:
             # Find parent subnet
             self.subnet = self.find_parent()
+
+            if self.subnet is None:
+                raise ValidationError({
+                    'address': "No parent subnet found for this address"
+                })
 
             # Enforce unique IP space (if applicable)
             if (self.vrf is None and settings.ENFORCE_GLOBAL_UNIQUE) or (
@@ -103,7 +128,6 @@ class IPAddress(AbstractDatedModel):
         if self.interface:
             return self.interface.device
         return None
-
 
     def get_status_class(self):
         return STATUS_CHOICE_CSS[self.status]

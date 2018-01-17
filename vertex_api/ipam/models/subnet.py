@@ -30,6 +30,7 @@ class Subnet(models.Model):
         'self',
         related_name='children',
         null=True,
+        db_index=True,
         editable=False
     )
 
@@ -42,7 +43,7 @@ class Subnet(models.Model):
 
     role = models.ManyToManyField('ipam.Role', blank=True)
 
-    description = models.CharField(max_length=200, blank=True)
+    description = models.CharField(max_length=100, blank=True)
     notes = models.TextField(blank=True)
 
     def get_direct_children_subnets_from_cidr(self):

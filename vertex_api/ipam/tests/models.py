@@ -29,10 +29,13 @@ class SubnetsAndAddressesTests(TestCase):
         Subnet.objects.get_or_create(cidr='10.4.0.0/24')
         Subnet.objects.get_or_create(cidr='10.4.3.0/24')
 
+        IPAddress.objects.get_or_create(address='10.2.3.1')
+        IPAddress.objects.get_or_create(address='10.2.3.2')
+
         Subnet.objects.get_or_create(cidr='2001:db8:abcd:12::/64')
         Subnet.objects.get_or_create(cidr='2001:db8:abcd:12::/80')
 
-        IPAddress.objects.get_or_create(address='2001:db8:abcd:12::0')
+        IPAddress.objects.get_or_create(address='2001:db8:abcd:12::1')
 
 
     def tearDown(self):
@@ -155,3 +158,12 @@ class SubnetsAndAddressesTests(TestCase):
             ordered=False,
             transform=lambda s: str(s.cidr)
         )
+
+    def test_ip_address_no_parent(self):
+        with self.assertRaises(ValueError):
+            address, created = IPAddress.objects.get_or_create(address='172.31.3.1')
+
+    def test_ip_address_conflicting_with_subnet(self):
+        with self.assertRaises(ValueError):
+            address, created = IPAddress.objects.get_or_create(address='10.2.0.4')
+            pass
