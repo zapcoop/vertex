@@ -16,6 +16,7 @@ class Place(models.Model):
     formatted_address = models.CharField(max_length=200, editable=False)
     related_places = models.ManyToManyField(
         'self',
+        editable=False
     )
     point = models.PointField(srid=4326)
     google_place_id = models.CharField(max_length=200, unique=True)
