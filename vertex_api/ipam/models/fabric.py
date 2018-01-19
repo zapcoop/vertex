@@ -11,3 +11,6 @@ class Fabric(AbstractDatedModel):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name

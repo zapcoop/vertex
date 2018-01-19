@@ -20,7 +20,7 @@ from django.db import models
 # Roles
 
 from .ip_address import IPAddress
-from .ip_range import IPRange
+from .ip_range import IPRangeRole, IPRange
 from .subnet import Subnet
 from .vrf import VRF
 
