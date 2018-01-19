@@ -3,7 +3,7 @@ from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 from django.core.cache import cache
 import reversion
-from contacts.models import GENERIC_INFORMATION_TYPES
+from contacts.constants import GENERIC_INFORMATION_TYPES
 
 from contacts.rules.emailaddress import is_email_owner
 from contacts.rules.organization import is_object_organization_member, is_object_organization_admin

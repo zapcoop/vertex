@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import reversion
 
-from contacts.models import URL_SPECIFIC_INFORMATION_TYPES
+from contacts.constants import URL_SPECIFIC_INFORMATION_TYPES
 from contacts.rules.organization import is_object_organization_admin, is_object_organization_member
 from contacts.rules.person import is_same_organization, is_object_person_manager
 from contacts.rules.url import is_url_owner

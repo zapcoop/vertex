@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 import reversion
 from uuslug import uuslug
 
+from contacts.managers import ManufacturerManager, HardwareSupplierManager, TelecomProviderManager
 from contacts.rules.organization import is_organization_member
 from vertex import rules
 from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
@@ -83,11 +84,6 @@ class OrganizationAlias(AbstractDatedModel):
         return '{} alias of {}'.format(self.name, self.organization.name)
 
 
-class ManufacturerManager(models.Manager):
-    def get_queryset(self):
-        return super(ManufacturerManager, self).get_queryset().filter(groups=1)
-
-
 class Manufacturer(Organization):
     class Meta:
         proxy = True
@@ -95,16 +91,18 @@ class Manufacturer(Organization):
     objects = ManufacturerManager()
 
 
-class HardwareSupplierManager(models.Manager):
-    def get_queryset(self):
-        return super(HardwareSupplierManager, self).get_queryset().filter(groups=3)
-
-
 class HardwareSupplier(Organization):
     class Meta:
         proxy = True
 
     objects = HardwareSupplierManager()
+
+
+class TelecomProvider(Organization):
+    class Meta:
+        proxy = True
+
+    objects = TelecomProviderManager()
 
 
 rules.add_perm('contacts.view_organization', is_superuser | is_staff | is_organization_member)

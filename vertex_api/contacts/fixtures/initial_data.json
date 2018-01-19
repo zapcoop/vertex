@@ -19,9 +19,9 @@
     "fields": {
       "created_at": "2017-08-29T19:40:51.774Z",
       "modified_at": "2017-08-29T19:40:51.774Z",
-      "name": "Telecom Suppliers",
-      "name_en": "Telecom Suppliers",
-      "name_fr": "Fournisseurs de t\u00e9l\u00e9communications",
+      "name": "Telecom Providers",
+      "name_en": "Telecom Providers",
+      "name_fr": "Fournisseurs de services de t\u00e9l\u00e9communications",
       "description": null,
       "description_en": null,
       "description_fr": null

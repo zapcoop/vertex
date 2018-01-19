@@ -18,7 +18,7 @@ from contacts.models import EmailAddress
 from vertex.rules.predicates import has_django_permission, is_staff, is_superuser
 from contacts.rules.person import is_same_organization
 from vertex.models import AbstractDatedModel
-from . import GENERIC_INFORMATION_TYPES
+from contacts.constants import GENERIC_INFORMATION_TYPES
 from ..utils import gravatar_hash
 
 GENDER_CHOICES = (
