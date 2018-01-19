@@ -1,6 +1,7 @@
 # Heavily inspired from https://github.com/digitalocean/netbox/
 
 from colorfield.fields import ColorField
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -134,17 +135,18 @@ class Device(AbstractDatedModel):
         verbose_name='Status'
     )
 
-    # TODO: ADD IP ADDRESSES FK
-    # primary_ip4 = models.OneToOneField(
-    #     'ipam.IPAddress', related_name='primary_ip4_for', on_delete=models.SET_NULL, blank=True,
-    #     null=True,
-    #     verbose_name='Primary IPv4'
-    # )
-    # primary_ip6 = models.OneToOneField(
-    #     'ipam.IPAddress', related_name='primary_ip6_for', on_delete=models.SET_NULL, blank=True,
-    #     null=True,
-    #     verbose_name='Primary IPv6'
-    # )
+    primary_ip4 = models.OneToOneField(
+        'ipam.IPAddress', related_name='primary_ip4_for', on_delete=models.SET_NULL, blank=True,
+        null=True,
+        verbose_name='Primary IPv4'
+    )
+    primary_ip6 = models.OneToOneField(
+        'ipam.IPAddress', related_name='primary_ip6_for', on_delete=models.SET_NULL, blank=True,
+        null=True,
+        verbose_name='Primary IPv6'
+    )
+
+    description = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
 
     objects = DeviceManager()
@@ -183,33 +185,33 @@ class Device(AbstractDatedModel):
             else:
                 self.device_definition = self.asset.item.devicedefinition
 
-        # # Validate primary IPv4 address
-        # if self.primary_ip4 and (
-        #                 self.primary_ip4.interface is None or
-        #                 self.primary_ip4.interface.device != self
-        # ) and (
-        #                 self.primary_ip4.nat_inside.interface is None or
-        #                 self.primary_ip4.nat_inside.interface.device != self
-        # ):
-        #     raise ValidationError({
-        #         'primary_ip4': "The specified IP address ({}) is not assigned to this "
-        #                        "device.".format(
-        #             self.primary_ip4),
-        #     })
-        #
-        # # Validate primary IPv6 address
-        # if self.primary_ip6 and (
-        #                 self.primary_ip6.interface is None or
-        #                 self.primary_ip6.interface.device != self
-        # ) and (
-        #                 self.primary_ip6.nat_inside.interface is None or
-        #                 self.primary_ip6.nat_inside.interface.device != self
-        # ):
-        #     raise ValidationError({
-        #         'primary_ip6': "The specified IP address ({}) is not assigned to this "
-        #                        "device.".format(
-        #             self.primary_ip6),
-        #     })
+        # Validate primary IPv4 address
+        if self.primary_ip4 and (
+                        self.primary_ip4.interface is None or
+                        self.primary_ip4.interface.device != self
+        ) and (
+                        self.primary_ip4.nat_inside.interface is None or
+                        self.primary_ip4.nat_inside.interface.device != self
+        ):
+            raise ValidationError({
+                'primary_ip4': "The specified IP address ({}) is not assigned to this "
+                               "device.".format(
+                    self.primary_ip4),
+            })
+
+        # Validate primary IPv6 address
+        if self.primary_ip6 and (
+                        self.primary_ip6.interface is None or
+                        self.primary_ip6.interface.device != self
+        ) and (
+                        self.primary_ip6.nat_inside.interface is None or
+                        self.primary_ip6.nat_inside.interface.device != self
+        ):
+            raise ValidationError({
+                'primary_ip6': "The specified IP address ({}) is not assigned to this "
+                               "device.".format(
+                    self.primary_ip6),
+            })
 
     def save(self, *args, **kwargs):
         is_new = not bool(self.pk)
@@ -237,7 +239,6 @@ class Device(AbstractDatedModel):
                  self.device_definition.interface_templates.all()]
             )
 
-
     @property
     def display_name(self):
         if self.name:
@@ -246,16 +247,16 @@ class Device(AbstractDatedModel):
             return "{}".format(self.device_definition)
         return ""
 
-    # @property
-    # def primary_ip(self):
-    #     if settings.PREFER_IPV4 and self.primary_ip4:
-    #         return self.primary_ip4
-    #     elif self.primary_ip6:
-    #         return self.primary_ip6
-    #     elif self.primary_ip4:
-    #         return self.primary_ip4
-    #     else:
-    #         return None
+    @property
+    def primary_ip(self):
+        if settings.PREFER_IPV4 and self.primary_ip4:
+            return self.primary_ip4
+        elif self.primary_ip6:
+            return self.primary_ip6
+        elif self.primary_ip4:
+            return self.primary_ip4
+        else:
+            return None
 
     def get_status_css_class(self):
         return DEVICE_STATUS_CSS[self.status]
@@ -342,6 +343,37 @@ class PowerOutlet(models.Model):
     class Meta:
         app_label = 'infrastructure'
         unique_together = ['device', 'name']
+
+    def __str__(self):
+        return self.name
+
+
+class Component(models.Model):
+    """
+    A Component represents a serialized piece of hardware within a Device, such as a line card or
+    power supply.
+    Components are used only for inventory purposes.
+    """
+
+    device = models.ForeignKey('infrastructure.Device', related_name='inventory_items',
+                               on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', related_name='child_items', blank=True, null=True,
+                               on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, verbose_name='Name')
+    asset = models.ForeignKey(
+        'inventory.Asset',
+        blank=True,
+        null=True,
+        related_name='components',
+        on_delete=models.PROTECT
+    )
+    discovered = models.BooleanField(default=False, verbose_name='Discovered')
+    description = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['device__id', 'parent__id', 'name']
+        unique_together = ['device', 'parent', 'name']
 
     def __str__(self):
         return self.name
