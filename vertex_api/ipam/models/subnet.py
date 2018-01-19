@@ -1,3 +1,5 @@
+from ipaddress import ip_network
+
 from django.db import models, transaction
 from django.core.cache import cache
 import netaddr
@@ -66,8 +68,8 @@ class Subnet(models.Model):
         if cache.get('display_with_ancestors'):
             cache.delete('display_with_ancestors')
 
-        if not isinstance(self.cidr, netaddr.IPNetwork):
-            self.cidr = netaddr.IPNetwork(self.cidr)
+        if isinstance(self.cidr, str):
+            self.cidr = ip_network(self.cidr)
 
         self.version = self.cidr.version
 
